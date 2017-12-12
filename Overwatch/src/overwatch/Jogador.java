@@ -14,11 +14,12 @@ public class Jogador {
     /* Variáveis de instância */
     private String username;
     private String password;
+    //eventualmente colocar uma lista de partidas disputadas
 
     /* Construtor vazio */
     public Jogador() {
         this.username = "NA";
-        this.password = "NA";//colocamos caracteres aleatórios para segunrança??
+        this.password = "NA";
     }
 
     /* Construtor parametrizado */

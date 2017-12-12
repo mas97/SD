@@ -9,12 +9,18 @@ package overwatch;
  *
  * @author MarcoSilva
  */
-public class Overwatch {
+public class Heroi {
     
-    
-    
-    
-    public static void main(String[] args) {
-        
+    /* variáveis de instância */
+    private String nome;
+
+    public String getNome() {
+        return nome;
     }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+    
+    
 }
