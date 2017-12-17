@@ -5,13 +5,39 @@
  */
 package overwatch;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.HashMap;
 
 /**
  *
  * @author MarcoSilva
  */
 public class Servidor {
-    
-    private ServerSocket socket;
+
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+       
+        //map de outputs que será utilizado para partilhar as mensagens com os outros clientes 
+        HashMap<String, Jogador> jogadores = new HashMap<String, Jogador> ();
+
+        try {
+            ServerSocket sSocket = new ServerSocket(12345);
+
+            while (true) {
+                Socket clSocket = sSocket.accept();
+                Thread t = new Thread(new ServerWorker(clSocket, jogadores));
+                t.start();
+
+            }
+
+        } catch (IOException e) {
+        }
+    }
+
 }
