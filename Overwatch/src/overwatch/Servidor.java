@@ -5,7 +5,6 @@
  */
 package overwatch;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -24,7 +23,7 @@ public class Servidor {
     public static void main(String[] args) {
        
         //map de outputs que será utilizado para partilhar as mensagens com os outros clientes 
-        HashMap<String, Jogador> jogadores = new HashMap<String, Jogador> ();
+        HashMap<String, Jogador> jogadores = new HashMap<> ();
 
         try {
             ServerSocket sSocket = new ServerSocket(12345);

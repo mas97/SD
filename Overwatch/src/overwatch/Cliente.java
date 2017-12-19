@@ -10,6 +10,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
@@ -24,18 +25,18 @@ public class Cliente {
      */
     public static void main(String[] args) {
 
-        Socket socket = null;
-
-        BufferedReader in = null;
-
-        BufferedWriter out = null;
-
+	Socket socket = null;
+	
+	BufferedReader in = null;
+	
+	PrintWriter out = null;
+	    
         try {
             socket = new Socket("localhost", 12345);
-
+	    
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-            out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+	    
+            out = new PrintWriter(socket.getOutputStream(), true);
         } catch (IOException e) {
         }
 
@@ -43,7 +44,8 @@ public class Cliente {
 
         boolean inicio_sessao = false;
 
-        Scanner sc = new Scanner(System.in);
+        //Scanner sc = new Scanner(System.in);
+		BufferedReader inputUser = new BufferedReader(new InputStreamReader(System.in));
 
         try {
 
@@ -51,34 +53,39 @@ public class Cliente {
 
                 System.out.println("Bem vindo ao Overwatch!\nPara se registar selecione 1.\nSe já tem uma conta, selecione 2 para iniciar sessão.");
 
-                String option = sc.nextLine();
+                String option = inputUser.readLine();
+		
+				out.println(option);
 
                 boolean username_valido = false;
 
                 if (option.equals("1")) {
                     while (!username_valido) {
                         System.out.print("Introduza o nome de utilizador que pretende associar à sua conta: ");
-                        buffer = sc.nextLine();
+                        buffer = inputUser.readLine();
 
-                        out.write("1");
-                        out.newLine();
-                        out.flush();
+						//out.println("1");
+                        //out.write("1");
+                        //out.newLine();
+                        //out.flush();
 
-                        out.write(buffer);
-                        out.newLine();
-                        out.flush();
+						out.println(buffer);
+                        //out.write(buffer);
+                        //out.newLine();
+                        //out.flush();
 
                         if (in.readLine().equals("OK")) {
                             username_valido = true;
                             System.out.print("O nome de utilizador encontra-se disponível.\nIntroduza uma palavra passe de registo: ");
-                            buffer = sc.nextLine();
-                            out.write(buffer);
-                            out.newLine();
-                            out.flush();
+                            buffer = inputUser.readLine();
+                            out.println(buffer);
+							//out.write(buffer);
+                            //out.newLine();
+                            //out.flush();
                             inicio_sessao = true;
                         } else { //talvez precisamos aqui de uma var status para verificar o que o servidor respondeu
                             System.out.print("O nome de utilizador não se encontra disponível.\nSe pretender cancelar o processo de registo selecione a opção 0.");
-                            if (sc.nextLine().equals("0")) {
+                            if (inputUser.readLine().equals("0")) {
                                 break;
                             }
                         }
@@ -89,13 +96,14 @@ public class Cliente {
 
                     while (!username_existe) {
                         System.out.print("Introduza o seu nome de utilizador: ");
-                        buffer = sc.nextLine();
-                        out.write(buffer);
-                        out.newLine();
-                        out.flush();
+                        buffer = inputUser.readLine();
+                        out.println(buffer);
+			//out.write(buffer);
+                        //out.newLine();
+                        //out.flush();
 
                         buffer = in.readLine();
-
+			
                         if (buffer.equals("username válido")) {
                             username_existe = true;
 
@@ -103,10 +111,11 @@ public class Cliente {
 
                             while (!password_valida) {
                                 System.out.print("Introduza a sua palavra passe: ");
-                                buffer = sc.nextLine();
-                                out.write(buffer);
-                                out.newLine();
-                                out.flush();
+                                buffer = inputUser.readLine();
+                                out.println(buffer);
+				//out.write(buffer);
+                                //out.newLine();
+                                //out.flush();
                                 if (in.readLine().equals("palavra-passe válida")) {
                                     password_valida = true;
                                     inicio_sessao = true;
@@ -120,8 +129,9 @@ public class Cliente {
             
             System.out.println("Iniciou sessão com sucesso");
 
-            socket.shutdownOutput();
-            socket.shutdownInput();
+	    inputUser.close();
+            in.close();
+            out.close();
             socket.close();
         } catch (IOException e) {
         }

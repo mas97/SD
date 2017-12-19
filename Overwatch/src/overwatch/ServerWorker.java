@@ -10,6 +10,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.*;
 
@@ -20,7 +21,7 @@ import java.util.*;
 public class ServerWorker implements Runnable {
 
     private BufferedReader in;
-    private BufferedWriter out;
+    private PrintWriter out;
     private Socket socket;
     private Map<String, Jogador> jogadores;
 
@@ -30,9 +31,9 @@ public class ServerWorker implements Runnable {
 
         try {
             this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            this.out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+            this.out = new PrintWriter(socket.getOutputStream(), true);
         } catch (IOException e) {
-            System.out.println("Erro no establecimento de ligação.");
+            System.out.println("Erro no establecimento da ligação.");
         }
     }
 
@@ -50,6 +51,7 @@ public class ServerWorker implements Runnable {
         try {
 
             String option = in.readLine();
+			System.out.println(option);
 
             if (option.equals("1")) {
                 boolean registou = false;
@@ -57,11 +59,13 @@ public class ServerWorker implements Runnable {
                 while (!registou) {
                     username = in.readLine();
                     if (this.jogadores.containsKey(username)) {
-                        out.write("indisponivel");
+                        out.println("Indisponivel");
+			//out.write("indisponivel");
                     } else {
-                        out.write("OK");
-                        out.newLine();
-                        out.flush();
+						out.println("OK");
+//                        out.write("OK");
+//                        out.newLine();
+//                        out.flush();
 
                         password = in.readLine();
                         Jogador novo_jogador = new Jogador(username, password);
@@ -70,34 +74,40 @@ public class ServerWorker implements Runnable {
                     }
                 }
             } else if (option.equals("2")) {
+				
                 username = in.readLine();
                 if (!this.jogadores.containsKey(username)){
-                    out.write("nao existe");
-                    out.newLine();
-                    out.flush();
+					out.println("nao existe");
+//                    out.write("nao existe");
+//                    out.newLine();
+//                    out.flush();
                 }
                 else {
-                    out.write("username válido");
-                    out.newLine();
-                    out.flush();
+					
+					out.println("username válido");
+//                    out.write("username válido");
+//                    out.newLine();
+//                    out.flush();
                     
                     password = in.readLine();
                     Jogador aux = this.jogadores.get(username);
                     if (aux.checkPassword(password)){
-                        out.write("palavra-passe válida");
-                        out.newLine();
-                        out.flush();
+						out.println("palavra-passe válida");
+//                        out.write("palavra-passe válida");
+//                        out.newLine();
+//                        out.flush();
                     }
                     else {
-                        out.write("palavra-passe errada");
-                        out.newLine();
-                        out.flush();
+						out.println("palavra-passe errada");
+//                        out.write("palavra-passe errada");
+//                        out.newLine();
+//                        out.flush();
                     }
                 }
             }
 
-            this.socket.shutdownOutput();
-            this.socket.shutdownInput();
+            this.in.close();
+            this.out.close();
             this.socket.close();
 
         } catch (IOException e) {
