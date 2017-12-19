@@ -9,7 +9,6 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.*;
@@ -60,12 +59,8 @@ public class ServerWorker implements Runnable {
                     username = in.readLine();
                     if (this.jogadores.containsKey(username)) {
                         out.println("Indisponivel");
-			//out.write("indisponivel");
                     } else {
 						out.println("OK");
-//                        out.write("OK");
-//                        out.newLine();
-//                        out.flush();
 
                         password = in.readLine();
                         Jogador novo_jogador = new Jogador(username, password);
@@ -78,30 +73,18 @@ public class ServerWorker implements Runnable {
                 username = in.readLine();
                 if (!this.jogadores.containsKey(username)){
 					out.println("nao existe");
-//                    out.write("nao existe");
-//                    out.newLine();
-//                    out.flush();
                 }
                 else {
 					
 					out.println("username válido");
-//                    out.write("username válido");
-//                    out.newLine();
-//                    out.flush();
                     
                     password = in.readLine();
                     Jogador aux = this.jogadores.get(username);
                     if (aux.checkPassword(password)){
 						out.println("palavra-passe válida");
-//                        out.write("palavra-passe válida");
-//                        out.newLine();
-//                        out.flush();
                     }
                     else {
 						out.println("palavra-passe errada");
-//                        out.write("palavra-passe errada");
-//                        out.newLine();
-//                        out.flush();
                     }
                 }
             }

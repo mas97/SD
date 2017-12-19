@@ -6,13 +6,10 @@
 package overwatch;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Scanner;
 
 /**
  *
@@ -44,7 +41,6 @@ public class Cliente {
 
         boolean inicio_sessao = false;
 
-        //Scanner sc = new Scanner(System.in);
 		BufferedReader inputUser = new BufferedReader(new InputStreamReader(System.in));
 
         try {
@@ -64,24 +60,13 @@ public class Cliente {
                         System.out.print("Introduza o nome de utilizador que pretende associar à sua conta: ");
                         buffer = inputUser.readLine();
 
-						//out.println("1");
-                        //out.write("1");
-                        //out.newLine();
-                        //out.flush();
-
 						out.println(buffer);
-                        //out.write(buffer);
-                        //out.newLine();
-                        //out.flush();
 
                         if (in.readLine().equals("OK")) {
                             username_valido = true;
                             System.out.print("O nome de utilizador encontra-se disponível.\nIntroduza uma palavra passe de registo: ");
                             buffer = inputUser.readLine();
                             out.println(buffer);
-							//out.write(buffer);
-                            //out.newLine();
-                            //out.flush();
                             inicio_sessao = true;
                         } else { //talvez precisamos aqui de uma var status para verificar o que o servidor respondeu
                             System.out.print("O nome de utilizador não se encontra disponível.\nSe pretender cancelar o processo de registo selecione a opção 0.");
@@ -98,9 +83,6 @@ public class Cliente {
                         System.out.print("Introduza o seu nome de utilizador: ");
                         buffer = inputUser.readLine();
                         out.println(buffer);
-			//out.write(buffer);
-                        //out.newLine();
-                        //out.flush();
 
                         buffer = in.readLine();
 			
@@ -113,9 +95,6 @@ public class Cliente {
                                 System.out.print("Introduza a sua palavra passe: ");
                                 buffer = inputUser.readLine();
                                 out.println(buffer);
-				//out.write(buffer);
-                                //out.newLine();
-                                //out.flush();
                                 if (in.readLine().equals("palavra-passe válida")) {
                                     password_valida = true;
                                     inicio_sessao = true;
