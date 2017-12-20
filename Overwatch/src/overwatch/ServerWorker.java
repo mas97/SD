@@ -69,7 +69,9 @@ public class ServerWorker implements Runnable {
                     }
                 }
             } else if (option.equals("2")) {
-				
+                boolean iniciou_sessao = false;
+		
+                while(!iniciou_sessao){
                 username = in.readLine();
                 if (!this.jogadores.containsKey(username)){
 					out.println("nao existe");
@@ -82,10 +84,12 @@ public class ServerWorker implements Runnable {
                     Jogador aux = this.jogadores.get(username);
                     if (aux.checkPassword(password)){
 						out.println("palavra-passe válida");
+                                                iniciou_sessao = true;
                     }
                     else {
 						out.println("palavra-passe errada");
                     }
+                }
                 }
             }
 

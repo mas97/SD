@@ -85,6 +85,7 @@ public class Cliente {
                         out.println(buffer);
 
                         buffer = in.readLine();
+                        System.out.println("buffer: " + buffer);
 			
                         if (buffer.equals("username válido")) {
                             username_existe = true;
