@@ -50,7 +50,6 @@ public class ServerWorker implements Runnable {
         try {
 
             String option = in.readLine();
-			System.out.println(option);
 
             if (option.equals("1")) {
                 boolean registou = false;
