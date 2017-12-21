@@ -24,15 +24,17 @@ public class Servidor {
        
         //map de outputs que será utilizado para partilhar as mensagens com os outros clientes 
         HashMap<String, Jogador> jogadores = new HashMap<> ();
+		HashMap<Integer, Matchmaking> salasRank = new HashMap<>();
+		//Cria as 9 salas para fazer o matchmaking
+		for (int i = 0; i < 9; i++)	
+			salasRank.put(i, new Matchmaking(2));
 
         try {
             ServerSocket sSocket = new ServerSocket(12345);
-
             while (true) {
                 Socket clSocket = sSocket.accept();
-                Thread t = new Thread(new ServerWorker(clSocket, jogadores));
+                Thread t = new Thread(new ServerWorker(clSocket, jogadores, salasRank));
                 t.start();
-
             }
 
         } catch (IOException e) {

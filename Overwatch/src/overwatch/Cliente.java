@@ -108,8 +108,10 @@ public class Cliente {
             }
             
             System.out.println("Iniciou sessão com sucesso");
+			String resposta = in.readLine();
+			System.out.println("Server response: " + resposta);
 
-	    inputUser.close();
+			inputUser.close();
             in.close();
             out.close();
             socket.close();

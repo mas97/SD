@@ -22,11 +22,16 @@ public class ServerWorker implements Runnable {
     private BufferedReader in;
     private PrintWriter out;
     private Socket socket;
+	//Partilhado por todas as threads
     private Map<String, Jogador> jogadores;
+	private String jogSessao;
+	private HashMap<Integer, Matchmaking> salasRank;
 
-    public ServerWorker(Socket socket, Map<String, Jogador> jogadores) {
+    public ServerWorker(Socket socket, Map<String, Jogador> jogadores, HashMap<Integer, Matchmaking> salasRank) {
         this.socket = socket;
         this.jogadores = jogadores;
+		this.jogSessao = null;
+		this.salasRank = salasRank;
 
         try {
             this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -34,12 +39,6 @@ public class ServerWorker implements Runnable {
         } catch (IOException e) {
             System.out.println("Erro no establecimento da ligação.");
         }
-    }
-
-    public void writeLine(BufferedWriter out, String value) throws IOException {
-        out.write(value);
-        out.newLine();
-        out.flush();
     }
 
     public void run() {
@@ -62,8 +61,10 @@ public class ServerWorker implements Runnable {
 						out.println("OK");
 
                         password = in.readLine();
-                        Jogador novo_jogador = new Jogador(username, password);
+                        Jogador novo_jogador = new Jogador(username, password, 0);
+						//Fazer "lock" para escrita segura
                         this.jogadores.put(username, novo_jogador);
+						this.jogSessao = username;
                         registou = true;
                     }
                 }
@@ -71,26 +72,72 @@ public class ServerWorker implements Runnable {
                 boolean iniciou_sessao = false;
 		
                 while(!iniciou_sessao){
-                username = in.readLine();
-                if (!this.jogadores.containsKey(username)){
-					out.println("nao existe");
-                }
-                else {
-					
-					out.println("username válido");
-                    
-                    password = in.readLine();
-                    Jogador aux = this.jogadores.get(username);
-                    if (aux.checkPassword(password)){
-						out.println("palavra-passe válida");
-                                                iniciou_sessao = true;
-                    }
-                    else {
-						out.println("palavra-passe errada");
-                    }
-                }
+					username = in.readLine();
+					if (!this.jogadores.containsKey(username)){
+						out.println("nao existe");
+					}
+					else {
+						out.println("username válido");
+
+						while (!iniciou_sessao) {
+							password = in.readLine();
+							Jogador aux = this.jogadores.get(username);
+							if (aux.checkPassword(password)){
+								out.println("palavra-passe válida");
+								this.jogSessao = username;
+								iniciou_sessao = true;
+							}
+							else {
+								out.println("palavra-passe errada");
+							}
+						}
+					}
                 }
             }
+			
+			//SESSÃO INICIADA
+			if (jogSessao != null) {
+				try {
+					//MATCHMAKING
+					int meuRank = jogadores.get(jogSessao).getRank();
+					
+					//Carimbo que diz a que partida pertenço dentro do mesmo rank
+					int minhaPartida = -1;
+					
+					//Sala -> é o número da queue em que entra
+					int minhaSala = -1;
+					
+					//Vai buscar a sala indicada para o rank do jogSessao e faz queue
+					int numJogMeuRank = salasRank.get(meuRank).getNumJog();
+					if (meuRank != 9 && meuRank != 0) {
+						int numJogAntRank = salasRank.get(meuRank - 1).getNumJog();
+						if (numJogMeuRank >= numJogAntRank) {
+							minhaPartida = salasRank.get(meuRank).queue();
+							minhaSala = meuRank;
+						}
+						else {
+							minhaPartida = salasRank.get(meuRank - 1).queue();
+							minhaSala = meuRank - 1;
+						}
+					}
+					else if (meuRank == 9) {
+						minhaPartida = salasRank.get(meuRank - 1).queue();
+						minhaSala = meuRank - 1;
+					}
+					else {
+						minhaPartida = salasRank.get(meuRank).queue();
+						minhaSala = meuRank;
+					}
+					
+					//FAZER EQUIPAS
+					// Cada equipa pode ser identificada unicamente com base na
+					// minhaSala e na minhaPartida.
+					
+					
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
 
             this.in.close();
             this.out.close();
