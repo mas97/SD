@@ -109,7 +109,7 @@ public class Cliente {
             
             System.out.println("Iniciou sessão com sucesso");
 			String resposta = in.readLine();
-			System.out.println("Server response: " + resposta);
+			System.out.println("Equipa: " + resposta);
 
 			inputUser.close();
             in.close();

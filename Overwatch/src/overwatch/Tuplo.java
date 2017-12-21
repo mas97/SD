@@ -34,6 +34,12 @@ public class Tuplo<L,R> {
     public void setR(R r) {
         this.r = r;
     }
-    
-    
+
+    public boolean equals(Object o) {
+		if (this == o) { return true; }
+		if ( o == null || (this.getClass() != o.getClass()) )
+			return false;
+		Tuplo t = (Tuplo) o;
+		return t.getL().equals(this.l) && t.getR().equals(this.r);
+	}
 }

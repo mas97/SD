@@ -28,12 +28,14 @@ public class Servidor {
 		//Cria as 9 salas para fazer o matchmaking
 		for (int i = 0; i < 9; i++)	
 			salasRank.put(i, new Matchmaking(2));
+		
+		CriadoresEquipas ce = new CriadoresEquipas();
 
         try {
             ServerSocket sSocket = new ServerSocket(12345);
             while (true) {
                 Socket clSocket = sSocket.accept();
-                Thread t = new Thread(new ServerWorker(clSocket, jogadores, salasRank));
+                Thread t = new Thread(new ServerWorker(clSocket, jogadores, salasRank, ce));
                 t.start();
             }
 

@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.*;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  *
@@ -26,12 +27,18 @@ public class ServerWorker implements Runnable {
     private Map<String, Jogador> jogadores;
 	private String jogSessao;
 	private HashMap<Integer, Matchmaking> salasRank;
+	private CriadoresEquipas ce;
 
-    public ServerWorker(Socket socket, Map<String, Jogador> jogadores, HashMap<Integer, Matchmaking> salasRank) {
+	
+
+    public ServerWorker(Socket socket, Map<String, Jogador> jogadores, 
+						HashMap<Integer, Matchmaking> salasRank, 
+						CriadoresEquipas ce) {
         this.socket = socket;
         this.jogadores = jogadores;
 		this.jogSessao = null;
 		this.salasRank = salasRank;
+		this.ce = ce;
 
         try {
             this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -133,6 +140,17 @@ public class ServerWorker implements Runnable {
 					// Cada equipa pode ser identificada unicamente com base na
 					// minhaSala e na minhaPartida.
 					
+					Tuplo t = new Tuplo<>(minhaSala, minhaPartida);
+					
+//					MakeEquipa me = new MakeEquipa(0);
+//					ce.acrescentaMakeEquipa(t, me);
+//					System.out.println(ce.existeMakeEquipa(t));
+					
+					ce.criaMakeEquipa(t, minhaSala);
+					
+					int minhaEquipa = ce.getMakeEquipa(t).makeEquipa(meuRank);
+					
+					out.println(minhaEquipa);
 					
 				} catch (InterruptedException e) {
 					e.printStackTrace();
