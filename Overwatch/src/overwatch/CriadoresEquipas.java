@@ -6,6 +6,7 @@
 package overwatch;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -13,7 +14,7 @@ import java.util.HashMap;
  */
 public class CriadoresEquipas {
 	//Dado uma sala e um partida, devolve a partida respetiva
-	private HashMap<Integer, HashMap<Integer, MakeEquipa>> criadoresEquipas;
+	private Map<Integer, Map<Integer, FazEquipas>> criadoresEquipas;
 	
 	public CriadoresEquipas () {
 		this.criadoresEquipas = new HashMap<>();
@@ -28,23 +29,23 @@ public class CriadoresEquipas {
 	}
 */
 	
-	public synchronized MakeEquipa getMakeEquipa(int rankSala, int partida) {
+	public synchronized FazEquipas getFazEquipa(int rankSala, int partida) {
 		return criadoresEquipas.get(rankSala).get(partida);
 	}
 
 	
-	public synchronized void criaMakeEquipa(int rankSala, int numPartida) {
+	public synchronized void criaFazEquipa(int rankSala, int numPartida) {
 		//Se não contém sala, então cria-se um hashmap com a partida lá dentro
 		if(!criadoresEquipas.containsKey(rankSala)) {
-			MakeEquipa me = new MakeEquipa(rankSala);
-			HashMap<Integer, MakeEquipa> newMakeEquipa = new HashMap<>();
+			FazEquipas me = new FazEquipas(rankSala);
+			HashMap<Integer, FazEquipas> newMakeEquipa = new HashMap<>();
 			newMakeEquipa.put(numPartida, me);
 			criadoresEquipas.put(rankSala, newMakeEquipa);
 		}
 		// Se já contém uma sala para o rank específico, então basta criar uma
 		// partida
 		else if (!criadoresEquipas.get(rankSala).containsKey(numPartida)){
-			MakeEquipa me = new MakeEquipa(rankSala);
+			FazEquipas me = new FazEquipas(rankSala);
 			criadoresEquipas.get(rankSala).put(numPartida, me);
 		}
 	}

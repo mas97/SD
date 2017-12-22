@@ -6,13 +6,11 @@
 package overwatch;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.*;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  *
@@ -23,15 +21,18 @@ public class ServerWorker implements Runnable {
     private BufferedReader in;
     private PrintWriter out;
     private Socket socket;
-	//Partilhado por todas as threads
-    private Map<String, Jogador> jogadores;
+	// Todos os jogadores inscritos
+    private JogadoresInscritos jogadores;
+	// Jogador que se encontra nesta thread
 	private String jogSessao;
+	// Salas de matchmaking de acordo com o rank
 	private HashMap<Integer, Matchmaking> salasRank;
+	// Criadores de equipas de acordo com o rank e a partida
 	private CriadoresEquipas ce;
 
 	
 
-    public ServerWorker(Socket socket, Map<String, Jogador> jogadores, 
+    public ServerWorker(Socket socket, JogadoresInscritos jogadores, 
 						HashMap<Integer, Matchmaking> salasRank, 
 						CriadoresEquipas ce) {
         this.socket = socket;
@@ -57,30 +58,32 @@ public class ServerWorker implements Runnable {
 
             String option = in.readLine();
 
+			// REGISTO ---------------------------------------------------------
             if (option.equals("1")) {
                 boolean registou = false;
                 
                 while (!registou) {
                     username = in.readLine();
-                    if (this.jogadores.containsKey(username)) {
+                    if (this.jogadores.containsJogador(username)) {
                         out.println("Indisponivel");
                     } else {
 						out.println("OK");
 
                         password = in.readLine();
-                        Jogador novo_jogador = new Jogador(username, password, 0);
-						//Fazer "lock" para escrita segura
-                        this.jogadores.put(username, novo_jogador);
+                        Jogador novo_jogador = new Jogador(username, password, 0);			
+                        this.jogadores.putJogador(novo_jogador);
 						this.jogSessao = username;
                         registou = true;
                     }
                 }
-            } else if (option.equals("2")) {
+            }
+			// AUTENTICAÇÃO ----------------------------------------------------
+			else if (option.equals("2")) {
                 boolean iniciou_sessao = false;
 		
                 while(!iniciou_sessao){
 					username = in.readLine();
-					if (!this.jogadores.containsKey(username)){
+					if (!this.jogadores.containsJogador(username)){
 						out.println("nao existe");
 					}
 					else {
@@ -88,7 +91,7 @@ public class ServerWorker implements Runnable {
 
 						while (!iniciou_sessao) {
 							password = in.readLine();
-							Jogador aux = this.jogadores.get(username);
+							Jogador aux = this.jogadores.getJogador(username);
 							if (aux.checkPassword(password)){
 								out.println("palavra-passe válida");
 								this.jogSessao = username;
@@ -102,11 +105,11 @@ public class ServerWorker implements Runnable {
                 }
             }
 			
-			//SESSÃO INICIADA
+			//SESSÃO INICIADA --------------------------------------------------
 			if (jogSessao != null) {
 				try {
-					//MATCHMAKING
-					int meuRank = jogadores.get(jogSessao).getRank();
+					//MATCHMAKING ----------------------------------------------
+					int meuRank = jogadores.getJogador(jogSessao).getRank();
 					
 					//Carimbo que diz a que partida pertenço dentro do mesmo rank
 					int minhaPartida = -1;
@@ -136,15 +139,21 @@ public class ServerWorker implements Runnable {
 						minhaSala = meuRank;
 					}
 					
-					//FAZER EQUIPAS
+					//FAZER EQUIPAS --------------------------------------------
 					// Cada equipa pode ser identificada unicamente com base na
 					// minhaSala e na minhaPartida.
 					
-					ce.criaMakeEquipa(minhaSala, minhaPartida);
+					ce.criaFazEquipa(minhaSala, minhaPartida);
 					
-					int minhaEquipa = ce.getMakeEquipa(minhaSala, minhaPartida).makeEquipa(meuRank);
+					int minhaEquipa = ce.getFazEquipa(minhaSala, minhaPartida).fazEquipa(meuRank);
 					
 					out.println(minhaSala + "  " + minhaEquipa);
+					
+					//ESCOLHA DOS HERÓIS ---------------------------------------
+					// Neste ponto sabemos: minhaSala, minhaPartida, minhaEquipa.
+					// Estes dados identificam exatamente todo o que precisamos
+					// para a escolha dos heróis.
+					
 					
 				} catch (InterruptedException e) {
 					e.printStackTrace();

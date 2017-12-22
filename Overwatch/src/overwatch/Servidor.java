@@ -21,16 +21,20 @@ public class Servidor {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-       
-        //map de outputs que será utilizado para partilhar as mensagens com os outros clientes 
-        HashMap<String, Jogador> jogadores = new HashMap<> ();
+
+		// Map que dado um rank (0-8) corresponde a respetiva sala de matchmaking
 		HashMap<Integer, Matchmaking> salasRank = new HashMap<>();
 		//Cria as 9 salas para fazer o matchmaking
 		for (int i = 0; i < 9; i++)	
 			salasRank.put(i, new Matchmaking(2));
 		
+		// Hash com os dados necessários para criar uma equipa
 		CriadoresEquipas ce = new CriadoresEquipas();
-
+		
+		// Hash com o registo de todos os jogadores
+		HashMap<String, Jogador> jogadoresHash = new HashMap<>();
+		JogadoresInscritos jogadores = new JogadoresInscritos(jogadoresHash);
+		
         try {
             ServerSocket sSocket = new ServerSocket(12345);
             while (true) {
