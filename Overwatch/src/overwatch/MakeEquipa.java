@@ -29,7 +29,6 @@ public class MakeEquipa {
 		//Equipa: 1 ou 2
 		int numEquipa = 0;
 		//Colunas iguais
-		System.out.println(numPreenchidosEquip1 + "  " + numPreenchidosEquip2);
 		if (numPreenchidosEquip1 == numPreenchidosEquip2) {
 			if (rankJog > rankSala) { //Colunas iguais e sou maior
 				if (numMaioresEquip1 <= numMaioresEquip2) {
@@ -63,7 +62,6 @@ public class MakeEquipa {
 		}
 		//Coluna da direita é menor
 		else {
-			System.out.println("Entrou fim");
 			numEquipa = 2;
 			numPreenchidosEquip2++;
 			if (rankJog > rankSala)
