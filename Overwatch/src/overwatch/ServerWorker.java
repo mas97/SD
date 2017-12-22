@@ -140,17 +140,11 @@ public class ServerWorker implements Runnable {
 					// Cada equipa pode ser identificada unicamente com base na
 					// minhaSala e na minhaPartida.
 					
-					Tuplo t = new Tuplo<>(minhaSala, minhaPartida);
+					ce.criaMakeEquipa(minhaSala, minhaPartida);
 					
-//					MakeEquipa me = new MakeEquipa(0);
-//					ce.acrescentaMakeEquipa(t, me);
-//					System.out.println(ce.existeMakeEquipa(t));
+					int minhaEquipa = ce.getMakeEquipa(minhaSala, minhaPartida).makeEquipa(meuRank);
 					
-					ce.criaMakeEquipa(t, minhaSala);
-					
-					int minhaEquipa = ce.getMakeEquipa(t).makeEquipa(meuRank);
-					
-					out.println(minhaEquipa);
+					out.println(minhaSala + "  " + minhaEquipa);
 					
 				} catch (InterruptedException e) {
 					e.printStackTrace();
