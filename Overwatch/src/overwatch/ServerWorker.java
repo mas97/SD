@@ -108,52 +108,55 @@ public class ServerWorker implements Runnable {
 			//SESSÃO INICIADA --------------------------------------------------
 			if (jogSessao != null) {
 				try {
+					option = in.readLine();
+					
 					//MATCHMAKING ----------------------------------------------
-					int meuRank = jogadores.getJogador(jogSessao).getRank();
-					
-					//Carimbo que diz a que partida pertenço dentro do mesmo rank
-					int minhaPartida = -1;
-					
-					//Sala -> é o número da queue em que entra
-					int minhaSala = -1;
-					
-					//Vai buscar a sala indicada para o rank do jogSessao e faz queue
-					int numJogMeuRank = salasRank.get(meuRank).getNumJog();
-					if (meuRank != 9 && meuRank != 0) {
-						int numJogAntRank = salasRank.get(meuRank - 1).getNumJog();
-						if (numJogMeuRank >= numJogAntRank) {
-							minhaPartida = salasRank.get(meuRank).queue();
-							minhaSala = meuRank;
+					if (option.equals("1")) {
+						int meuRank = jogadores.getJogador(jogSessao).getRank();
+
+						//Carimbo que diz a que partida pertenço dentro do mesmo rank
+						int minhaPartida = -1;
+
+						//Sala -> é o número da queue em que entra
+						int minhaSala = -1;
+
+						//Vai buscar a sala indicada para o rank do jogSessao e faz queue
+						int numJogMeuRank = salasRank.get(meuRank).getNumJog();
+						if (meuRank != 9 && meuRank != 0) {
+							int numJogAntRank = salasRank.get(meuRank - 1).getNumJog();
+							if (numJogMeuRank >= numJogAntRank) {
+								minhaPartida = salasRank.get(meuRank).queue();
+								minhaSala = meuRank;
+							}
+							else {
+								minhaPartida = salasRank.get(meuRank - 1).queue();
+								minhaSala = meuRank - 1;
+							}
 						}
-						else {
+						else if (meuRank == 9) {
 							minhaPartida = salasRank.get(meuRank - 1).queue();
 							minhaSala = meuRank - 1;
 						}
+						else {
+							minhaPartida = salasRank.get(meuRank).queue();
+							minhaSala = meuRank;
+						}
+
+						//FAZER EQUIPAS --------------------------------------------
+						// Cada equipa pode ser identificada unicamente com base na
+						// minhaSala e na minhaPartida.
+
+						ce.criaFazEquipa(minhaSala, minhaPartida);
+
+						int minhaEquipa = ce.getFazEquipa(minhaSala, minhaPartida).fazEquipa(meuRank);
+
+						out.println(minhaSala + "  " + minhaEquipa);
+
+						//ESCOLHA DOS HERÓIS ---------------------------------------
+						// Neste ponto sabemos: minhaSala, minhaPartida, minhaEquipa.
+						// Estes dados identificam exatamente todo o que precisamos
+						// para a escolha dos heróis.
 					}
-					else if (meuRank == 9) {
-						minhaPartida = salasRank.get(meuRank - 1).queue();
-						minhaSala = meuRank - 1;
-					}
-					else {
-						minhaPartida = salasRank.get(meuRank).queue();
-						minhaSala = meuRank;
-					}
-					
-					//FAZER EQUIPAS --------------------------------------------
-					// Cada equipa pode ser identificada unicamente com base na
-					// minhaSala e na minhaPartida.
-					
-					ce.criaFazEquipa(minhaSala, minhaPartida);
-					
-					int minhaEquipa = ce.getFazEquipa(minhaSala, minhaPartida).fazEquipa(meuRank);
-					
-					out.println(minhaSala + "  " + minhaEquipa);
-					
-					//ESCOLHA DOS HERÓIS ---------------------------------------
-					// Neste ponto sabemos: minhaSala, minhaPartida, minhaEquipa.
-					// Estes dados identificam exatamente todo o que precisamos
-					// para a escolha dos heróis.
-					
 					
 				} catch (InterruptedException e) {
 					e.printStackTrace();

@@ -9,7 +9,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import static java.lang.Thread.sleep;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -46,8 +49,10 @@ public class Cliente {
         try {
 
             while (!inicio_sessao) {
-
-                System.out.println("Bem vindo ao Overwatch!\nPara se registar selecione 1.\nSe já tem uma conta, selecione 2 para iniciar sessão.");
+				System.out.print("\033[H\033[2J");
+                System.out.println("Bem vindo ao Overwatch!\n"
+					             + "Para se registar selecione 1.\n"
+					             + "Se já tem uma conta, selecione 2 para iniciar sessão.");
 
                 String option = inputUser.readLine();
 		
@@ -55,8 +60,10 @@ public class Cliente {
 
                 boolean username_valido = false;
 
+				// REGISTO -----------------------------------------------------
                 if (option.equals("1")) {
                     while (!username_valido) {
+						System.out.print("\033[H\033[2J");
                         System.out.print("Introduza o nome de utilizador que pretende associar à sua conta: ");
                         buffer = inputUser.readLine();
 
@@ -64,28 +71,33 @@ public class Cliente {
 
                         if (in.readLine().equals("OK")) {
                             username_valido = true;
-                            System.out.print("O nome de utilizador encontra-se disponível.\nIntroduza uma palavra passe de registo: ");
+                            System.out.print("O nome de utilizador encontra-se disponível.\n"
+										   + "Introduza uma palavra passe de registo: ");
                             buffer = inputUser.readLine();
                             out.println(buffer);
                             inicio_sessao = true;
                         } else { //talvez precisamos aqui de uma var status para verificar o que o servidor respondeu
-                            System.out.print("O nome de utilizador não se encontra disponível.\nSe pretender cancelar o processo de registo selecione a opção 0.");
+							System.out.print("\033[H\033[2J");
+                            System.out.print("O nome de utilizador não se encontra disponível.\n"
+								           + "Se pretender cancelar o processo de registo selecione a opção 0.");
                             if (inputUser.readLine().equals("0")) {
                                 break;
                             }
                         }
 
                     }
-                } else if (option.equals("2")) {
+                }
+				// AUTENTICAÇÃO ------------------------------------------------
+				else if (option.equals("2")) {
                     boolean username_existe = false;
 
                     while (!username_existe) {
+						System.out.print("\033[H\033[2J");
                         System.out.print("Introduza o seu nome de utilizador: ");
                         buffer = inputUser.readLine();
                         out.println(buffer);
 
                         buffer = in.readLine();
-                        System.out.println("buffer: " + buffer);
 			
                         if (buffer.equals("username válido")) {
                             username_existe = true;
@@ -107,16 +119,44 @@ public class Cliente {
 
             }
             
-            System.out.println("Iniciou sessão com sucesso");
-			String resposta = in.readLine();
-			System.out.println("Equipa: " + resposta);
+			// SESSÃO INICIADA -------------------------------------------------
+            System.out.print("\033[H\033[2J");
+			System.out.println("Iniciou sessão com sucesso.\n"
+				             + "Que deseja fazer?");
+			
+			// MATCHMAKING -----------------------------------------------------
+			System.out.println("1 - JOGAR\n"
+				             + "0 - SAIR");
+			System.out.print("Opção: ");
+			buffer = inputUser.readLine();
+			out.println(buffer);
+			
+			if (buffer.equals("1")) {
+				System.out.print("\033[H\033[2J");
+				System.out.println("Em fila de espera para jogar...");
+				String resposta = in.readLine();
+				System.out.println("Foi encontrada uma sala!");
+				System.out.println("Equipa: " + resposta);
+			}
+			
+			// SAIR ------------------------------------------------------------
+			System.out.print("\033[H\033[2J");
+			System.out.print("Desligando");
+			sleep(1000);
+			System.out.print(".");
+			sleep(1000);
+			System.out.print(".");
+			sleep(1000);
+			System.out.println(".");
 
 			inputUser.close();
             in.close();
             out.close();
             socket.close();
         } catch (IOException e) {
-        }
-
-    }
+			e.printStackTrace();
+        } catch (InterruptedException ex) {
+			Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
 }
