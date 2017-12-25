@@ -28,18 +28,22 @@ public class ServerWorker implements Runnable {
 	// Salas de matchmaking de acordo com o rank
 	private HashMap<Integer, Matchmaking> salasRank;
 	// Criadores de equipas de acordo com o rank e a partida
-	private CriadoresEquipas ce;
+	private HashFazEquipas hashFE;
+	private HashChats hashC;
+	private HashMap<String, Heroi> herois;
 
 	
 
     public ServerWorker(Socket socket, JogadoresInscritos jogadores, 
 						HashMap<Integer, Matchmaking> salasRank, 
-						CriadoresEquipas ce) {
+						HashFazEquipas hashFE,
+						HashMap<String, Heroi> herois) {
         this.socket = socket;
         this.jogadores = jogadores;
 		this.jogSessao = null;
 		this.salasRank = salasRank;
-		this.ce = ce;
+		this.hashFE = hashFE;
+		this.herois = herois;
 
         try {
             this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -146,16 +150,21 @@ public class ServerWorker implements Runnable {
 						// Cada equipa pode ser identificada unicamente com base na
 						// minhaSala e na minhaPartida.
 
-						ce.criaFazEquipa(minhaSala, minhaPartida);
+						hashFE.criaFazEquipa(minhaSala, minhaPartida);
 
-						int minhaEquipa = ce.getFazEquipa(minhaSala, minhaPartida).fazEquipa(meuRank);
+						int minhaEquipa = hashFE.getFazEquipa(minhaSala, minhaPartida).fazEquipa(meuRank);
 
 						out.println(minhaSala + "  " + minhaEquipa);
 
 						//ESCOLHA DOS HERÓIS ---------------------------------------
 						// Neste ponto sabemos: minhaSala, minhaPartida, minhaEquipa.
 						// Estes dados identificam exatamente todo o que precisamos
-						// para a escolha dos heróis.
+						// para iniciar o chat para a escolha dos heróis.
+						hashC.criaChat(minhaSala, minhaPartida, herois);
+
+						String meuHeroi = hashC.getChat(minhaSala, minhaPartida).escolheHeroi(meuRank);
+
+						out.println(minhaSala + "  " + minhaEquipa + "  " + meuHeroi);
 					}
 					
 				} catch (InterruptedException e) {

@@ -29,17 +29,49 @@ public class Servidor {
 			salasRank.put(i, new Matchmaking(2));
 		
 		// Hash com os dados necessários para criar uma equipa
-		CriadoresEquipas ce = new CriadoresEquipas();
+		HashFazEquipas ce = new HashFazEquipas();
 		
 		// Hash com o registo de todos os jogadores
 		HashMap<String, Jogador> jogadoresHash = new HashMap<>();
 		JogadoresInscritos jogadores = new JogadoresInscritos(jogadoresHash);
 		
+		//HashMap com os 30 heróis
+		HashMap<String, Heroi> herois = new HashMap<>();
+		herois.put("Barik", new Heroi("Barik"));
+		herois.put("Buck", new Heroi("Buck"));
+		herois.put("Cassie", new Heroi("Cassie"));
+		herois.put("Fernando", new Heroi("Fernando"));
+		herois.put("Barik", new Heroi("Barik"));
+		herois.put("Barik", new Heroi("Barik"));
+		herois.put("Barik", new Heroi("Barik"));
+		herois.put("Barik", new Heroi("Barik"));
+		herois.put("Barik", new Heroi("Barik"));
+		herois.put("Barik", new Heroi("Barik"));
+		herois.put("Barik", new Heroi("Barik"));
+		herois.put("Barik", new Heroi("Barik"));
+		herois.put("Barik", new Heroi("Barik"));
+		herois.put("Barik", new Heroi("Barik"));
+		herois.put("Barik", new Heroi("Barik"));
+		herois.put("Barik", new Heroi("Barik"));
+		herois.put("Barik", new Heroi("Barik"));
+		herois.put("Barik", new Heroi("Barik"));
+		herois.put("Barik", new Heroi("Barik"));
+		herois.put("Barik", new Heroi("Barik"));
+		herois.put("Barik", new Heroi("Barik"));
+		herois.put("Barik", new Heroi("Barik"));
+		herois.put("Barik", new Heroi("Barik"));
+		herois.put("Barik", new Heroi("Barik"));
+		herois.put("Barik", new Heroi("Barik"));
+		herois.put("Barik", new Heroi("Barik"));
+		herois.put("Barik", new Heroi("Barik"));
+		herois.put("Barik", new Heroi("Barik"));
+		herois.put("Barik", new Heroi("Barik"));
+		
         try {
             ServerSocket sSocket = new ServerSocket(12345);
             while (true) {
                 Socket clSocket = sSocket.accept();
-                Thread t = new Thread(new ServerWorker(clSocket, jogadores, salasRank, ce));
+                Thread t = new Thread(new ServerWorker(clSocket, jogadores, salasRank, ce, herois));
                 t.start();
             }
 

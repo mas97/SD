@@ -13,6 +13,10 @@ public class Heroi {
     
     /* variáveis de instância */
     private String nome;
+	
+	public Heroi(String nome) {
+		this.nome = nome;
+	}
 
     public String getNome() {
         return nome;

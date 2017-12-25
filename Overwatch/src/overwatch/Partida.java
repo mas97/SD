@@ -6,7 +6,6 @@
 package overwatch;
 
 import java.util.*;
-import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
@@ -15,11 +14,13 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class Partida {
     
-    private List<Heroi> herois_equipa1;
-    private Lock lock1;
+	//Heróis escolhidos da equipa 1
+	private List<Heroi> herois_equipa1;
+    private ReentrantLock lock1;
     
+	//Heróis escolhidos da equipa 2
     private List<Heroi> herois_equipa2;
-    private Lock lock2;
+    private ReentrantLock lock2;
     
     //construtor terá como parametro um apontador para a estrutura de dados de herois
     public Partida(){

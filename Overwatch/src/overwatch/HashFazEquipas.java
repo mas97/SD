@@ -12,11 +12,11 @@ import java.util.Map;
  *
  * @author rokai
  */
-public class CriadoresEquipas {
-	//Dado uma sala e um partida, devolve a partida respetiva
+public class HashFazEquipas {
+	//Dado uma sala e um partida, devolve a FazEquipas respetiva
 	private Map<Integer, Map<Integer, FazEquipas>> criadoresEquipas;
 	
-	public CriadoresEquipas () {
+	public HashFazEquipas () {
 		this.criadoresEquipas = new HashMap<>();
 	}
 	/*
@@ -35,7 +35,7 @@ public class CriadoresEquipas {
 
 	
 	public synchronized void criaFazEquipa(int rankSala, int numPartida) {
-		//Se não contém sala, então cria-se um hashmap com a partida lá dentro
+		//Se não contém sala, então cria-se um hashmap com a FazEquipas lá dentro
 		if(!criadoresEquipas.containsKey(rankSala)) {
 			FazEquipas me = new FazEquipas(rankSala);
 			HashMap<Integer, FazEquipas> newMakeEquipa = new HashMap<>();
@@ -43,7 +43,7 @@ public class CriadoresEquipas {
 			criadoresEquipas.put(rankSala, newMakeEquipa);
 		}
 		// Se já contém uma sala para o rank específico, então basta criar uma
-		// partida
+		// FazEquipa
 		else if (!criadoresEquipas.get(rankSala).containsKey(numPartida)){
 			FazEquipas me = new FazEquipas(rankSala);
 			criadoresEquipas.get(rankSala).put(numPartida, me);
