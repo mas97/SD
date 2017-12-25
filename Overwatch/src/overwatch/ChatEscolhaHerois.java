@@ -18,10 +18,10 @@ import java.util.logging.Logger;
  * @author rokai
  */
 public class ChatEscolhaHerois {
-	ArrayList<String> log;
+	private ArrayList<String> log;
 	
 	//Hash dos possíveis heróis.
-	HashMap<String, Heroi> herois;
+	private HashMap<String, Heroi> herois;
 	
 	//Heróis escolhidos da equipa 1
 	private List<Heroi> herois_equipa1;
@@ -61,8 +61,8 @@ public class ChatEscolhaHerois {
 		}
 	}
 
-	String escolheHeroi(int meuRank) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	public String escolheHeroi(int minhaEquipa) {
+		
 	}
 
 }

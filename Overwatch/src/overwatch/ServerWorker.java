@@ -162,7 +162,7 @@ public class ServerWorker implements Runnable {
 						// para iniciar o chat para a escolha dos heróis.
 						hashC.criaChat(minhaSala, minhaPartida, herois);
 
-						String meuHeroi = hashC.getChat(minhaSala, minhaPartida).escolheHeroi(meuRank);
+						String meuHeroi = hashC.getChat(minhaSala, minhaPartida).escolheHeroi(minhaEquipa);
 
 						out.println(minhaSala + "  " + minhaEquipa + "  " + meuHeroi);
 					}
