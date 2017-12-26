@@ -37,12 +37,14 @@ public class ServerWorker implements Runnable {
     public ServerWorker(Socket socket, JogadoresInscritos jogadores, 
 						HashMap<Integer, Matchmaking> salasRank, 
 						HashFazEquipas hashFE,
+						HashChats hashC,
 						HashMap<String, Heroi> herois) {
         this.socket = socket;
         this.jogadores = jogadores;
 		this.jogSessao = null;
 		this.salasRank = salasRank;
 		this.hashFE = hashFE;
+		this.hashC = hashC;
 		this.herois = herois;
 
         try {
@@ -162,8 +164,14 @@ public class ServerWorker implements Runnable {
 						// para iniciar o chat para a escolha dos heróis.
 						hashC.criaChat(minhaSala, minhaPartida, herois);
 
-						String meuHeroi = hashC.getChat(minhaSala, minhaPartida).escolheHeroi(minhaEquipa);
+						ChatEscolhaHerois meuChat = hashC.getChat(minhaSala, minhaPartida);
 
+						Thread jl = new Thread( new TrataJogadorLeitura(in, out, meuChat, minhaEquipa, jogSessao) );
+						jl.start();
+						Thread je = new Thread( new TrataJogadorEscrita(out, meuChat) );
+						je.start();
+
+						String meuHeroi = meuChat.getHeroi(minhaEquipa, jogSessao);
 						out.println(minhaSala + "  " + minhaEquipa + "  " + meuHeroi);
 					}
 					

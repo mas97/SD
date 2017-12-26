@@ -29,7 +29,10 @@ public class Servidor {
 			salasRank.put(i, new Matchmaking(2));
 		
 		// Hash com os dados necessários para criar uma equipa
-		HashFazEquipas ce = new HashFazEquipas();
+		HashFazEquipas hashFE = new HashFazEquipas();
+		
+		// Hash com os dados necessários para criar uma equipa
+		HashChats hashC = new HashChats();
 		
 		// Hash com o registo de todos os jogadores
 		HashMap<String, Jogador> jogadoresHash = new HashMap<>();
@@ -68,11 +71,12 @@ public class Servidor {
 		herois.put("Lian", new Heroi("Lian"));
 		herois.put("Jenos", new Heroi("Jenos"));
 		
+		
         try {
             ServerSocket sSocket = new ServerSocket(12345);
             while (true) {
                 Socket clSocket = sSocket.accept();
-                Thread t = new Thread(new ServerWorker(clSocket, jogadores, salasRank, ce, herois));
+                Thread t = new Thread(new ServerWorker(clSocket, jogadores, salasRank, hashFE, hashC, herois));
                 t.start();
             }
 

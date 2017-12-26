@@ -24,15 +24,21 @@ public class ChatEscolhaHerois {
 	private HashMap<String, Heroi> herois;
 	
 	//Heróis escolhidos da equipa 1
-	private List<Heroi> herois_equipa1;
+	// Key -> nome herói
+	// Value -> username
+	private HashMap<String, String> herois_equipa1;
     private ReentrantLock lock1;
     
 	//Heróis escolhidos da equipa 2
-    private List<Heroi> herois_equipa2;
+	// Key -> nome herói
+	// Value -> username
+    private HashMap<String, String> herois_equipa2;
     private ReentrantLock lock2;
 
 	public ChatEscolhaHerois(HashMap<String, Heroi> herois) {
 		this.log = new ArrayList<>();
+		this.herois_equipa1 = new HashMap<>();
+		this.herois_equipa2 = new HashMap<>();
 		this.herois = herois;
 	}
 
@@ -60,9 +66,37 @@ public class ChatEscolhaHerois {
 			Logger.getLogger(ChatEscolhaHerois.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
-
-	public String escolheHeroi(int minhaEquipa) {
-		
+	
+	private HashMap<String, String> daEquipa (int equipa) {
+		if (equipa == 1) {
+			return herois_equipa1;
+		}
+		return herois_equipa2;
+	}
+	
+	public String getHeroi(int equipa, String username) {
+		String res = null;
+		HashMap<String, String> heroisE = this.daEquipa(equipa);
+		for (String h : heroisE.keySet()) {
+			if (heroisE.get(h).equals(username))
+				res = h;
+		}
+		return res;
 	}
 
+	public boolean existe (String inputJogador) {
+		return this.herois.containsKey(inputJogador);
+	}
+	
+	public boolean isEscolhido(String inputJogador, int equipa) {
+		HashMap<String, String> heroisE = this.daEquipa(equipa);
+		return heroisE.containsKey(inputJogador);
+	}
+
+	public void escolheHeroi(String heroi, int equipa, String username) {
+		HashMap<String, String> heroisE = this.daEquipa(equipa);
+		heroisE.put(heroi, username);
+		
+		this.add(username + " escolheu: " + heroi);
+	}
 }

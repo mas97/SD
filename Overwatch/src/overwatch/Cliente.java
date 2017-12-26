@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import static java.lang.Thread.sleep;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,12 +25,44 @@ public class Cliente {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+		//HashMap com os 30 heróis
+		HashMap<String, Heroi> herois = new HashMap<>();
+		herois.put("Barik", new Heroi("Barik"));
+		herois.put("Buck", new Heroi("Buck"));
+		herois.put("Cassie", new Heroi("Cassie"));
+		herois.put("Fernando", new Heroi("Fernando"));
+		herois.put("Grohk", new Heroi("Grohk"));
+		herois.put("Pip", new Heroi("Pip"));
+		herois.put("Ruckus", new Heroi("Ruckus"));
+		herois.put("Skye", new Heroi("Skye"));
+		herois.put("Evie", new Heroi("Evie"));
+		herois.put("Grover", new Heroi("Grover"));
+		herois.put("Kinessa", new Heroi("Kinessa"));
+		herois.put("Androxus", new Heroi("Androxus"));
+		herois.put("Ying", new Heroi("Ying"));
+		herois.put("Drogoz", new Heroi("Drogoz"));
+		herois.put("Bomb King", new Heroi("Bomb King"));
+		herois.put("Viktor", new Heroi("Viktor"));
+		herois.put("Makoa", new Heroi("Makoa"));
+		herois.put("Mal'Damba", new Heroi("Mal'Damba"));
+		herois.put("Sha Lin", new Heroi("Sha Lin"));
+		herois.put("Tyra", new Heroi("Tyra"));
+		herois.put("Torvald", new Heroi("Torvald"));
+		herois.put("Maeve", new Heroi("Maeve"));
+		herois.put("Inara", new Heroi("Inara"));
+		herois.put("Lex", new Heroi("Lex"));
+		herois.put("Seris", new Heroi("Seris"));
+		herois.put("Willo", new Heroi("Willo"));
+		herois.put("Ash", new Heroi("Ash"));
+		herois.put("Zhin", new Heroi("Zhin"));
+		herois.put("Lian", new Heroi("Lian"));
+		herois.put("Jenos", new Heroi("Jenos"));
 
-	Socket socket = null;
-	
-	BufferedReader in = null;
-	
-	PrintWriter out = null;
+		Socket socket = null;
+
+		BufferedReader in = null;
+
+		PrintWriter out = null;
 	    
         try {
             socket = new Socket("localhost", 12345);
@@ -138,6 +171,25 @@ public class Cliente {
 				System.out.println("Foi encontrada uma sala!");
 				System.out.println("Equipa: " + resposta);
 			}
+			
+			//ESCOLHA DOS HEROIS -----------------------------------------------
+			System.out.print("\033[H\033[2J");
+			System.out.println("ESCOLHA DOS HEROIS");
+			for (String h : herois.keySet())
+				System.out.println(h);
+
+			System.out.print("Escolha o seu herói: ");
+			buffer = inputUser.readLine();
+			out.println(buffer);
+			
+			buffer = in.readLine();
+			
+			System.out.println("chat: " + buffer);
+			
+			sleep(5000);
+			out.println("x");
+			
+			System.out.println("heroi: " + in.readLine());
 			
 			// SAIR ------------------------------------------------------------
 			System.out.print("\033[H\033[2J");

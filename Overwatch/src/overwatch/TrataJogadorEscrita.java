@@ -5,6 +5,7 @@
  */
 package overwatch;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -13,24 +14,27 @@ import java.net.Socket;
  *
  * @author rokai
  */
-public class TrataJogadorEscrita {
-	Socket cs;
+//LÊ DA ESTRUTURA E MANDA PARA O CLIENTE
+public class TrataJogadorEscrita implements Runnable {
+//	Socket cs;
+	PrintWriter out;
 	ChatEscolhaHerois chat;
     
-    TrataJogadorEscrita (Socket cs, ChatEscolhaHerois c) {
-        this.cs = cs;
+    TrataJogadorEscrita (PrintWriter out, ChatEscolhaHerois c) {
+//        this.cs = cs;
+		this.out = out;
 		this.chat = c;
     }
     
     public void run() {
         
-		try {
-			PrintWriter out = new PrintWriter( cs.getOutputStream(), true );
+//		try {
+//			PrintWriter out = new PrintWriter( cs.getOutputStream(), true );
 			chat.writeloop(out);
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-		
+//		} catch (IOException ex) {
+//			ex.printStackTrace();
+//		}
+//		
         
     }
 
