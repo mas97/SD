@@ -45,7 +45,7 @@ public class TrataJogadorLeitura implements Runnable {
 	        {
 				//Filtrar a info antes de chegar ao chat para difundir
 				if(chat.existe(current)) {
-					if (!chat.isEscolhido(current, equipa)) 
+					if (!chat.isEscolhido(current, equipa))
 						chat.escolheHeroi(current, equipa, username);
 					else
 						out.println("esta escolhido");

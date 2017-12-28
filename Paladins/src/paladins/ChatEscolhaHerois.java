@@ -55,8 +55,12 @@ public class ChatEscolhaHerois {
 		try {
 			while (true) {
 				synchronized (this) {
-					while (i >= log.size()) wait();
+					while (i >= log.size()) {
+                                            System.out.println("Fiquei presa no wait");
+                                            wait();
+                                        }
 					s = log.get(i);
+                                        System.out.println("Fui buscar: " + s);
 				}
 
 				pw.println(s);

@@ -165,11 +165,12 @@ public class ServerWorker implements Runnable {
 						hashC.criaChat(minhaSala, minhaPartida, herois);
 
 						ChatEscolhaHerois meuChat = hashC.getChat(minhaSala, minhaPartida);
-
-						Thread jl = new Thread( new TrataJogadorLeitura(in, out, meuChat, minhaEquipa, jogSessao) );
-						jl.start();
-						Thread je = new Thread( new TrataJogadorEscrita(out, meuChat) );
+                                                
+                                                Thread je = new Thread( new TrataJogadorEscrita(this.out, meuChat) );
 						je.start();
+
+						Thread jl = new Thread( new TrataJogadorLeitura(in, this.out, meuChat, minhaEquipa, jogSessao) );
+						jl.start();
 
 						String meuHeroi = meuChat.getHeroi(minhaEquipa, jogSessao);
 						out.println(minhaSala + "  " + minhaEquipa + "  " + meuHeroi);
@@ -180,9 +181,9 @@ public class ServerWorker implements Runnable {
 				}
 			}
 
-            this.in.close();
-            this.out.close();
-            this.socket.close();
+            //this.in.close();
+            //this.out.close();
+            //this.socket.close();
 
         } catch (IOException e) {
         }
