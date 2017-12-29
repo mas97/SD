@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -31,8 +32,11 @@ public class Servidor {
 		// Hash com os dados necessários para criar uma equipa
 		HashFazEquipas hashFE = new HashFazEquipas();
 		
-		// Hash com os dados necessários para criar uma equipa
+		// Hash com os dados necessários para criar um chat
 		HashChats hashC = new HashChats();
+                
+                // Hash com os timers para cada uma das salas
+                HashMap<Integer, HashMap<Integer, Timer>> timers = new HashMap<>();
 		
 		// Hash com o registo de todos os jogadores
 		HashMap<String, Jogador> jogadoresHash = new HashMap<>();
@@ -76,7 +80,7 @@ public class Servidor {
             ServerSocket sSocket = new ServerSocket(12345);
             while (true) {
                 Socket clSocket = sSocket.accept();
-                Thread t = new Thread(new ServerWorker(clSocket, jogadores, salasRank, hashFE, hashC, herois));
+                Thread t = new Thread(new ServerWorker(clSocket, jogadores, salasRank, hashFE, hashC, herois, timers));
                 t.start();
             }
 

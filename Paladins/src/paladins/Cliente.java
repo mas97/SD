@@ -198,6 +198,15 @@ public class Cliente {
             //inicialização do worker do cliente que irá ouvir constantemente qq mensagem que chegue
             Thread t = new Thread(new ClientWorker(in));
             t.start();
+            
+            buffer = in.readLine();
+            System.out.println(buffer);
+  
+            //TESTE
+            /*for (int i = 0; i < 30; i++){
+                Thread.sleep(1000);
+                System.out.println(i);
+            }*/
 
             System.out.print("Escolha o seu herói: ");
             buffer = inputUser.readLine();

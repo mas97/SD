@@ -31,6 +31,7 @@ public class ServerWorker implements Runnable {
 	private HashFazEquipas hashFE;
 	private HashChats hashC;
 	private HashMap<String, Heroi> herois;
+        private HashMap<Integer, HashMap<Integer, Timer>> timers;
 
 	
 
@@ -38,7 +39,9 @@ public class ServerWorker implements Runnable {
 						HashMap<Integer, Matchmaking> salasRank, 
 						HashFazEquipas hashFE,
 						HashChats hashC,
-						HashMap<String, Heroi> herois) {
+						HashMap<String, Heroi> herois,
+                                                HashMap<Integer, HashMap<Integer, Timer>> timers) {
+        
         this.socket = socket;
         this.jogadores = jogadores;
 		this.jogSessao = null;
@@ -46,6 +49,7 @@ public class ServerWorker implements Runnable {
 		this.hashFE = hashFE;
 		this.hashC = hashC;
 		this.herois = herois;
+                this.timers = timers;
 
         try {
             this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -174,6 +178,23 @@ public class ServerWorker implements Runnable {
 
 						String meuHeroi = meuChat.getHeroi(minhaEquipa, jogSessao);
 						out.println(minhaSala + "  " + minhaEquipa + "  " + meuHeroi);
+                                                
+                                                
+                                                
+                                                // FASE DE TESTE
+                                                //é preciso o meu rank aqui também?
+                                                //if (timers.containsKey(minhaSala)){
+                                                //    Timer t = timers.get(minhaSala);
+                                                //    t.novojogador();
+                                                //}
+                                                //else {
+                                                    
+                                                //   Timer new_timer = new Timer();
+                                                //    this.timers.put(minhaSala, new_timer);
+                                                //    new_timer.novojogador();
+                                                //}
+                                                
+                                                
 					}
 					
 				} catch (InterruptedException e) {
