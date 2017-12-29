@@ -6,12 +6,11 @@
 package paladins;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.Socket;
-import java.util.*;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.Scanner;
 
 /**
  *
@@ -20,10 +19,13 @@ import java.util.*;
 public class ClientWorker implements Runnable {
 
     private BufferedReader in;
-    private String nickname;
-
-    public ClientWorker(BufferedReader in) {
+	private PrintWriter out;
+//	private JavaRobotRescue robot;
+	
+    public ClientWorker(BufferedReader in, PrintWriter out){ //, JavaRobotRescue robot) {
         this.in = in;
+		this.out = out;
+//		this.robot = robot;
     }
 
     public void run() {
@@ -31,15 +33,20 @@ public class ClientWorker implements Runnable {
         String buffer = "init";
 
         try {
-            while (true) {
-                
-                buffer = in.readLine();
-                System.out.print(buffer + ": ");
+			// Se receber start ou timeout quer dizer que a escolha dos heróis
+			// acabou.
+            while (!buffer.equals("start") && !buffer.equals("timeout")) {
                 buffer = in.readLine();
                 System.out.println(buffer);
             }
+			System.out.println("Prima enter para começar o jogo");
+			//Para desligar o TrataJogadorLeitura
+			out.println("morre");
 
+			//Para desligar o ciclo de leitura do herói do jogador.
+//			robot.typeEnter();
         } catch (IOException e) {
+			e.printStackTrace();
         }
     }
 

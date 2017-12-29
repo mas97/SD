@@ -5,6 +5,7 @@
  */
 package paladins;
 
+import java.awt.AWTException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -12,6 +13,7 @@ import java.io.PrintWriter;
 import static java.lang.Thread.sleep;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -78,6 +80,7 @@ public class Cliente {
         boolean inicio_sessao = false;
 
         BufferedReader inputUser = new BufferedReader(new InputStreamReader(System.in));
+		PrintWriter outUser = new PrintWriter(System.out, true);
 
         try {
             
@@ -194,29 +197,34 @@ public class Cliente {
                 System.out.println(h);
             }
 
+			JavaRobotRescue robot = null;
+			try {
+				robot = new JavaRobotRescue();
+			} catch (AWTException ex) {
+				Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
+			}
             //FASE DE CHAT
             //inicialização do worker do cliente que irá ouvir constantemente qq mensagem que chegue
-            Thread t = new Thread(new ClientWorker(in));
-            t.start();
-            
-            buffer = in.readLine();
-            System.out.println(buffer);
-  
-            //TESTE
-            /*for (int i = 0; i < 30; i++){
-                Thread.sleep(1000);
-                System.out.println(i);
-            }*/
-
+			Scanner inputAux = new Scanner(System.in);
+            Thread t = new Thread(new ClientWorker(in, out)); //, robot));
+            t.start();		
+					
+			
+			//Permite ao jogador escolher o herói
             System.out.print("Escolha o seu herói: ");
-            buffer = inputUser.readLine();
-            out.println(buffer);
+			while ((buffer = inputAux.nextLine()) != null && !buffer.equals("")) {
+				out.println(buffer);
+			}
+			
+			System.out.println("Cheguei aqui no cliente.");
+			//Main thread espera que a escolha do herói acabe.
+			t.join();
+			
+			
+			
+			buffer = in.readLine();
+			System.out.println(buffer);
 
-            //buffer = in.readLine();
-            //System.out.println("chat: " + buffer);
-            //sleep(5000);
-            //out.println("x");
-            //System.out.println("heroi: " + in.readLine());
             // SAIR ------------------------------------------------------------
             System.out.print("\033[H\033[2J");
             System.out.print("Desligando");

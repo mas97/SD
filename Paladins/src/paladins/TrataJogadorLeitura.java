@@ -7,9 +7,7 @@ package paladins;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.Socket;
 
 /**
  *
@@ -34,17 +32,13 @@ public class TrataJogadorLeitura implements Runnable {
     public void run() {
         
         try {
-            
-//	        BufferedReader in = new BufferedReader( new InputStreamReader( cs.getInputStream() ) );
-//			PrintWriter out = new PrintWriter(cs.getOutputStream(), true);
-
-	        System.out.println("New Connection Received");
 
 			String current;
-	        while ((current = in.readLine()) != null)
+			// Se receber um morre do ClienteWorker então tem de terminar.
+	        while ((current = in.readLine()) != null && !current.equals("morre"))
 	        {
 				//Filtrar a info antes de chegar ao chat para difundir
-				if(chat.existe(current)) {
+				if(!current.equals("timeout") && !current.equals("start") && chat.existe(current)) {
 					if (!chat.isEscolhido(current, equipa))
 						chat.escolheHeroi(current, equipa, username);
 					else
@@ -54,11 +48,6 @@ public class TrataJogadorLeitura implements Runnable {
 					out.println("nao existe");
 	            System.out.println("echo: " + current);
 	        }
-
-//	        in.close();
-//			out.close();
-//	        cs.close();
-	        System.out.println("Connection Closed");
 	        
 	    } catch ( IOException e) { e.printStackTrace(); }
         

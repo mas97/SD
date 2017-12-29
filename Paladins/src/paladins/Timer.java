@@ -5,8 +5,6 @@
  */
 package paladins;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,25 +16,28 @@ public class Timer implements Runnable {
 
     //número de jogadores que estão em espera para iniciar a escolha de personagens
     private int em_espera;
+	private ChatEscolhaHerois chat;
+	private boolean acabouGeral = false;
 
-    public Timer(HashChats chats) {
+    public Timer(ChatEscolhaHerois chat) {
         this.em_espera = 0;
+		this.chat = chat;
     }
     
     @Override
-    public void run() {
+    public synchronized void run() {
         try {
-            if (em_espera < 10) {
-                this.em_espera++;
-                try {
-                    wait();
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(Timer.class.getName()).log(Level.SEVERE, null, ex);
-                }
+			boolean acabou = acabouGeral;
+			this.em_espera++;
+			if (em_espera < 2) {
+				while (acabou == acabouGeral)
+					wait();
             } else {
-                Thread.currentThread().sleep(30000);
-                notifyAll();
+                Thread.currentThread().sleep(20000);
+				chat.add("timeout");
+				acabouGeral = true;
                 this.em_espera = 0;
+                notifyAll();
             }
         } catch (InterruptedException ex) {
             Logger.getLogger(Timer.class.getName()).log(Level.SEVERE, null, ex);

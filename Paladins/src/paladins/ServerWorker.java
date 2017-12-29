@@ -31,7 +31,7 @@ public class ServerWorker implements Runnable {
 	private HashFazEquipas hashFE;
 	private HashChats hashC;
 	private HashMap<String, Heroi> herois;
-        private HashMap<Integer, HashMap<Integer, Timer>> timers;
+	private HashTimers hashT;
 
 	
 
@@ -40,7 +40,7 @@ public class ServerWorker implements Runnable {
 						HashFazEquipas hashFE,
 						HashChats hashC,
 						HashMap<String, Heroi> herois,
-                                                HashMap<Integer, HashMap<Integer, Timer>> timers) {
+						HashTimers timers) {
         
         this.socket = socket;
         this.jogadores = jogadores;
@@ -49,7 +49,7 @@ public class ServerWorker implements Runnable {
 		this.hashFE = hashFE;
 		this.hashC = hashC;
 		this.herois = herois;
-                this.timers = timers;
+		this.hashT = timers;
 
         try {
             this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -170,30 +170,28 @@ public class ServerWorker implements Runnable {
 
 						ChatEscolhaHerois meuChat = hashC.getChat(minhaSala, minhaPartida);
                                                 
-                                                Thread je = new Thread( new TrataJogadorEscrita(this.out, meuChat) );
+						Thread je = new Thread( new TrataJogadorEscrita(this.out, meuChat) );
 						je.start();
 
 						Thread jl = new Thread( new TrataJogadorLeitura(in, this.out, meuChat, minhaEquipa, jogSessao) );
 						jl.start();
+                                                
+                        //TIMER                        
+                        hashT.criaTimer(minhaSala, minhaPartida, meuChat);
 
+						Timer meuTimer = hashT.getTimer(minhaSala, minhaPartida);
+						
+						Thread timer = new Thread( meuTimer );
+						timer.start();
+						
+						timer.join();
+						je.join();
+						jl.join();
+						
+						System.out.println("Cheguei aqui no serverWorker.");
+						
 						String meuHeroi = meuChat.getHeroi(minhaEquipa, jogSessao);
-						out.println(minhaSala + "  " + minhaEquipa + "  " + meuHeroi);
-                                                
-                                                
-                                                
-                                                // FASE DE TESTE
-                                                //é preciso o meu rank aqui também?
-                                                //if (timers.containsKey(minhaSala)){
-                                                //    Timer t = timers.get(minhaSala);
-                                                //    t.novojogador();
-                                                //}
-                                                //else {
-                                                    
-                                                //   Timer new_timer = new Timer();
-                                                //    this.timers.put(minhaSala, new_timer);
-                                                //    new_timer.novojogador();
-                                                //}
-                                                
+						out.println(minhaSala + "  " + minhaEquipa + "  " + meuHeroi);                                                
                                                 
 					}
 					

@@ -35,12 +35,13 @@ public class Servidor {
 		// Hash com os dados necessários para criar um chat
 		HashChats hashC = new HashChats();
                 
-                // Hash com os timers para cada uma das salas
-                HashMap<Integer, HashMap<Integer, Timer>> timers = new HashMap<>();
+		// Hash com os timers para cada uma das salas
+		HashTimers timers = new HashTimers();
 		
 		// Hash com o registo de todos os jogadores
 		HashMap<String, Jogador> jogadoresHash = new HashMap<>();
 		JogadoresInscritos jogadores = new JogadoresInscritos(jogadoresHash);
+		
 		
 		//HashMap com os 30 heróis
 		HashMap<String, Heroi> herois = new HashMap<>();

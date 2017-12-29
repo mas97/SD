@@ -28,13 +28,7 @@ public class TrataJogadorEscrita implements Runnable {
     
     public void run() {
         
-//		try {
-//			PrintWriter out = new PrintWriter( cs.getOutputStream(), true );
 			chat.writeloop(this.out);
-//		} catch (IOException ex) {
-//			ex.printStackTrace();
-//		}
-//		
         
     }
 

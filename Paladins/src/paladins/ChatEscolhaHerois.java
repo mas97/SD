@@ -51,21 +51,30 @@ public class ChatEscolhaHerois {
 	public void writeloop (PrintWriter pw)
 	{
 		int i = 0;
-		String s;
+		String s = "init";
 		try {
-			while (true) {
+			// Se estiver escrito timeout ou start no log,
+			// quer dizer que o tempo de escolha dos heróis acabou.
+			while (!s.equals("timeout") && !s.equals("start")) {
 				synchronized (this) {
 					while (i >= log.size()) {
-                                            System.out.println("Fiquei presa no wait");
-                                            wait();
-                                        }
+						wait();
+					}
 					s = log.get(i);
-                                        System.out.println("Fui buscar: " + s);
 				}
-
+				
+				//Quando o timer acaba é preciso ver se todos escolher um herói.
+				if (s.equals("timeout")) {
+					int count1 = herois_equipa1.size();
+					int count2 = herois_equipa2.size();
+					if (count1 == 1 && count2 == 1)
+						s = "start";
+				}
+				
 				pw.println(s);
 				i++;
 			}
+			
 		} catch (InterruptedException ex) {
 			Logger.getLogger(ChatEscolhaHerois.class.getName()).log(Level.SEVERE, null, ex);
 		}
@@ -101,6 +110,6 @@ public class ChatEscolhaHerois {
 		HashMap<String, String> heroisE = this.daEquipa(equipa);
 		heroisE.put(heroi, username);
 		
-		this.add(username + " escolheu: " + heroi);
+		this.add("[ Equipa " + equipa + " ]  " + username + " escolheu: " + heroi);
 	}
 }
