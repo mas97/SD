@@ -8,10 +8,7 @@ package paladins;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- *
- * @author rokai
- */
+
 public class HashChats {
 	//Dado uma sala e uma partida, devolve a partida respetiva
 	private Map<Integer, Map<Integer, ChatEscolhaHerois>> chats;

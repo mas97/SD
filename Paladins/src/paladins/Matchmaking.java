@@ -5,10 +5,7 @@
  */
 package paladins;
 
-/**
- *
- * @author rokai
- */
+
 public class Matchmaking {
 	final int N;
 	int numJog = 0;

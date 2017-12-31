@@ -12,10 +12,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.*;
 
-/**
- *
- * @author MarcoSilva
- */
+
 public class ServerWorker implements Runnable {
 
     private BufferedReader in;

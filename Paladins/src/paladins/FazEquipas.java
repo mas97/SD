@@ -5,10 +5,7 @@
  */
 package paladins;
 
-/**
- *
- * @author rokai
- */
+
 public class FazEquipas {
 	
 	final int rankSala;

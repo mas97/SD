@@ -8,10 +8,7 @@ package paladins;
 import java.util.*;
 import java.util.concurrent.locks.ReentrantLock;
 
-/**
- *
- * @author MarcoSilva
- */
+
 public class Partida {
     
 	//Heróis escolhidos da equipa 1

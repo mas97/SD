@@ -8,10 +8,7 @@ package paladins;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author rokai
- */
+
 public class Jogo implements Runnable{
 	
 	private int resultado;

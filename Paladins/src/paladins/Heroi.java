@@ -5,10 +5,7 @@
  */
 package paladins;
 
-/**
- *
- * @author MarcoSilva
- */
+
 public class Heroi {
     
     /* variáveis de instância */

@@ -6,16 +6,10 @@
 package paladins;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
-import java.util.Scanner;
 
-/**
- *
- * @author MarcoSilva
- */
+
 public class ClientWorker implements Runnable {
 
     private BufferedReader in;

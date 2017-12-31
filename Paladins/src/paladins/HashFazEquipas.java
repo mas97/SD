@@ -8,10 +8,7 @@ package paladins;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- *
- * @author rokai
- */
+
 public class HashFazEquipas {
 	//Dado uma sala e um partida, devolve a FazEquipas respetiva
 	private Map<Integer, Map<Integer, FazEquipas>> criadoresEquipas;

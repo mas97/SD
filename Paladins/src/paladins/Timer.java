@@ -8,10 +8,7 @@ package paladins;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author MarcoSilva
- */
+
 public class Timer implements Runnable {
 
     //número de jogadores que estão em espera para iniciar a escolha de personagens

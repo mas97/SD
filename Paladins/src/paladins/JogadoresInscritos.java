@@ -8,10 +8,7 @@ package paladins;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- *
- * @author rokai
- */
+
 public class JogadoresInscritos {
 	private Map<String, Jogador> jogadores;
 	
