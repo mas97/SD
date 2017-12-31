@@ -24,6 +24,8 @@ public class TestClass {
             String password = gen.getName();
 
             System.out.println("Jogador criado com o username " + username + " e com a password " + password);
+            Thread cliente = new Thread(new Cliente(username, password));
+            cliente.start();
             
         }
     }
