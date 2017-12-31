@@ -213,11 +213,19 @@ public class ServerWorker implements Runnable {
 								int resultadoMeuJogo = meuJogo.getResultado();
 								
 								if (minhaEquipa == resultadoMeuJogo) {
+									if (meuRank != 9) {
+										meuRank++;
+										jogadores.getJogador(jogSessao).setRank(meuRank);
+									}
 									out.println("A sua equipa ganhou!");
 								}
 								else {
+									if (meuRank != 0) {
+										meuRank--;
+										jogadores.getJogador(jogSessao).setRank(meuRank);
+									}
 									out.println("A sua equipa perdeu...");
-								}								  
+								}
 							}
 						}
 						else if (option.equals("0"))
