@@ -38,6 +38,9 @@ public class Servidor {
 		// Hash com os timers para cada uma das salas
 		HashTimers timers = new HashTimers();
 		
+		// Hash com os jogos para cada uma das partidas
+		HashJogos hashJ = new HashJogos();
+		
 		// Hash com o registo de todos os jogadores
 		HashMap<String, Jogador> jogadoresHash = new HashMap<>();
 		JogadoresInscritos jogadores = new JogadoresInscritos(jogadoresHash);
@@ -81,7 +84,7 @@ public class Servidor {
             ServerSocket sSocket = new ServerSocket(12345);
             while (true) {
                 Socket clSocket = sSocket.accept();
-                Thread t = new Thread(new ServerWorker(clSocket, jogadores, salasRank, hashFE, hashC, herois, timers));
+                Thread t = new Thread(new ServerWorker(clSocket, jogadores, salasRank, hashFE, hashC, herois, timers, hashJ));
                 t.start();
             }
 

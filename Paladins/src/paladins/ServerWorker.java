@@ -32,6 +32,7 @@ public class ServerWorker implements Runnable {
 	private HashChats hashC;
 	private HashMap<String, Heroi> herois;
 	private HashTimers hashT;
+	private HashJogos hashJ;
 
 	
 
@@ -40,7 +41,8 @@ public class ServerWorker implements Runnable {
 						HashFazEquipas hashFE,
 						HashChats hashC,
 						HashMap<String, Heroi> herois,
-						HashTimers timers) {
+						HashTimers timers,
+						HashJogos hashJ) {
         
         this.socket = socket;
         this.jogadores = jogadores;
@@ -50,6 +52,7 @@ public class ServerWorker implements Runnable {
 		this.hashC = hashC;
 		this.herois = herois;
 		this.hashT = timers;
+		this.hashJ = hashJ;
 
         try {
             this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -63,6 +66,8 @@ public class ServerWorker implements Runnable {
 
         String username = null;
         String password = null;
+		boolean sair = false;
+		
 
         try {
 
@@ -118,81 +123,105 @@ public class ServerWorker implements Runnable {
 			//SESSÃO INICIADA --------------------------------------------------
 			if (jogSessao != null) {
 				try {
-					option = in.readLine();
-					
-					//MATCHMAKING ----------------------------------------------
-					if (option.equals("1")) {
-						int meuRank = jogadores.getJogador(jogSessao).getRank();
+					while (!sair) {
+						option = in.readLine();
 
-						//Carimbo que diz a que partida pertenço dentro do mesmo rank
-						int minhaPartida = -1;
+						//MATCHMAKING ----------------------------------------------
+						if (option.equals("1")) {
+							int meuRank = jogadores.getJogador(jogSessao).getRank();
 
-						//Sala -> é o número da queue em que entra
-						int minhaSala = -1;
+							//Carimbo que diz a que partida pertenço dentro do mesmo rank
+							int minhaPartida = -1;
 
-						//Vai buscar a sala indicada para o rank do jogSessao e faz queue
-						int numJogMeuRank = salasRank.get(meuRank).getNumJog();
-						if (meuRank != 9 && meuRank != 0) {
-							int numJogAntRank = salasRank.get(meuRank - 1).getNumJog();
-							if (numJogMeuRank >= numJogAntRank) {
-								minhaPartida = salasRank.get(meuRank).queue();
-								minhaSala = meuRank;
+							//Sala -> é o número da queue em que entra
+							int minhaSala = -1;
+
+							//Vai buscar a sala indicada para o rank do jogSessao e faz queue
+							int numJogMeuRank = salasRank.get(meuRank).getNumJog();
+							if (meuRank != 9 && meuRank != 0) {
+								int numJogAntRank = salasRank.get(meuRank - 1).getNumJog();
+								if (numJogMeuRank >= numJogAntRank) {
+									minhaPartida = salasRank.get(meuRank).queue();
+									minhaSala = meuRank;
+								}
+								else {
+									minhaPartida = salasRank.get(meuRank - 1).queue();
+									minhaSala = meuRank - 1;
+								}
 							}
-							else {
+							else if (meuRank == 9) {
 								minhaPartida = salasRank.get(meuRank - 1).queue();
 								minhaSala = meuRank - 1;
 							}
+							else {
+								minhaPartida = salasRank.get(meuRank).queue();
+								minhaSala = meuRank;
+							}
+
+							//FAZER EQUIPAS --------------------------------------------
+							// Cada equipa pode ser identificada unicamente com base na
+							// minhaSala e na minhaPartida.
+
+							hashFE.criaFazEquipa(minhaSala, minhaPartida);
+
+							int minhaEquipa = hashFE.getFazEquipa(minhaSala, minhaPartida).fazEquipa(meuRank);
+
+							out.println(minhaSala + "  " + minhaEquipa);
+
+							//ESCOLHA DOS HERÓIS ---------------------------------------
+							// Neste ponto sabemos: minhaSala, minhaPartida, minhaEquipa.
+							// Estes dados identificam exatamente todo o que precisamos
+							// para iniciar o chat para a escolha dos heróis.
+							hashC.criaChat(minhaSala, minhaPartida, herois);
+
+							ChatEscolhaHerois meuChat = hashC.getChat(minhaSala, minhaPartida);
+
+							Thread je = new Thread( new TrataJogadorEscrita(this.out, meuChat) );
+							je.start();
+
+							Thread jl = new Thread( new TrataJogadorLeitura(in, this.out, meuChat, minhaEquipa, jogSessao) );
+							jl.start();
+
+							//TIMER                        
+							hashT.criaTimer(minhaSala, minhaPartida, meuChat);
+
+							Timer meuTimer = hashT.getTimer(minhaSala, minhaPartida);
+
+							Thread timer = new Thread( meuTimer );
+							timer.start();
+
+							//Sincroniza todas as threads utilizadas no chat
+							timer.join();
+							je.join();
+							jl.join();
+
+							// Se não houve timeout e for para jogar
+							if (meuChat.isJogar()) {
+						
+								String meuHeroi = meuChat.getHeroi(minhaEquipa, jogSessao);
+
+								//CÁLCULO DO RESULTADO -------------------------
+								hashJ.criaJogo(minhaSala, minhaPartida);
+
+								Jogo meuJogo = hashJ.getJogo(minhaSala, minhaPartida);
+								Thread jogar = new Thread( meuJogo );
+								jogar.start();
+
+								// Sincroniza com o final do jogo
+								jogar.join();
+
+								int resultadoMeuJogo = meuJogo.getResultado();
+								
+								if (minhaEquipa == resultadoMeuJogo) {
+									out.println("A sua equipa ganhou!");
+								}
+								else {
+									out.println("A sua equipa perdeu...");
+								}								  
+							}
 						}
-						else if (meuRank == 9) {
-							minhaPartida = salasRank.get(meuRank - 1).queue();
-							minhaSala = meuRank - 1;
-						}
-						else {
-							minhaPartida = salasRank.get(meuRank).queue();
-							minhaSala = meuRank;
-						}
-
-						//FAZER EQUIPAS --------------------------------------------
-						// Cada equipa pode ser identificada unicamente com base na
-						// minhaSala e na minhaPartida.
-
-						hashFE.criaFazEquipa(minhaSala, minhaPartida);
-
-						int minhaEquipa = hashFE.getFazEquipa(minhaSala, minhaPartida).fazEquipa(meuRank);
-
-						out.println(minhaSala + "  " + minhaEquipa);
-
-						//ESCOLHA DOS HERÓIS ---------------------------------------
-						// Neste ponto sabemos: minhaSala, minhaPartida, minhaEquipa.
-						// Estes dados identificam exatamente todo o que precisamos
-						// para iniciar o chat para a escolha dos heróis.
-						hashC.criaChat(minhaSala, minhaPartida, herois);
-
-						ChatEscolhaHerois meuChat = hashC.getChat(minhaSala, minhaPartida);
-                                                
-						Thread je = new Thread( new TrataJogadorEscrita(this.out, meuChat) );
-						je.start();
-
-						Thread jl = new Thread( new TrataJogadorLeitura(in, this.out, meuChat, minhaEquipa, jogSessao) );
-						jl.start();
-                                                
-                        //TIMER                        
-                        hashT.criaTimer(minhaSala, minhaPartida, meuChat);
-
-						Timer meuTimer = hashT.getTimer(minhaSala, minhaPartida);
-						
-						Thread timer = new Thread( meuTimer );
-						timer.start();
-						
-						timer.join();
-						je.join();
-						jl.join();
-						
-						System.out.println("Cheguei aqui no serverWorker.");
-						
-						String meuHeroi = meuChat.getHeroi(minhaEquipa, jogSessao);
-						out.println(minhaSala + "  " + minhaEquipa + "  " + meuHeroi);                                                
-                                                
+						else if (option.equals("0"))
+							sair = true;
 					}
 					
 				} catch (InterruptedException e) {

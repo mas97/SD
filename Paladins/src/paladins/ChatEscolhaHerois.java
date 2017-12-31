@@ -34,12 +34,16 @@ public class ChatEscolhaHerois {
 	// Value -> username
     private HashMap<String, String> herois_equipa2;
     private ReentrantLock lock2;
+	
+	//Resultado da escolha dos herois (timeout/start)
+	private boolean jogar;
 
 	public ChatEscolhaHerois(HashMap<String, Heroi> herois) {
 		this.log = new ArrayList<>();
 		this.herois_equipa1 = new HashMap<>();
 		this.herois_equipa2 = new HashMap<>();
 		this.herois = herois;
+		this.jogar = false;
 	}
 
 	public synchronized void add (String s)
@@ -67,8 +71,10 @@ public class ChatEscolhaHerois {
 				if (s.equals("timeout")) {
 					int count1 = herois_equipa1.size();
 					int count2 = herois_equipa2.size();
-					if (count1 == 1 && count2 == 1)
+					if (count1 == 1 && count2 == 1) {
 						s = "start";
+						this.jogar = true;
+					}
 				}
 				
 				pw.println(s);
@@ -78,6 +84,10 @@ public class ChatEscolhaHerois {
 		} catch (InterruptedException ex) {
 			Logger.getLogger(ChatEscolhaHerois.class.getName()).log(Level.SEVERE, null, ex);
 		}
+	}
+
+	public boolean isJogar() {
+		return jogar;
 	}
 	
 	private HashMap<String, String> daEquipa (int equipa) {

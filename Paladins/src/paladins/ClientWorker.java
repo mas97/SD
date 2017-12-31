@@ -20,13 +20,17 @@ public class ClientWorker implements Runnable {
 
     private BufferedReader in;
 	private PrintWriter out;
-//	private JavaRobotRescue robot;
+	private boolean jogar;
 	
-    public ClientWorker(BufferedReader in, PrintWriter out){ //, JavaRobotRescue robot) {
+    public ClientWorker(BufferedReader in, PrintWriter out) {
         this.in = in;
 		this.out = out;
-//		this.robot = robot;
-    }
+		this.jogar = false;
+	}
+
+	public boolean isJogar() {
+		return jogar;
+	}
 
     public void run() {
 
@@ -39,12 +43,14 @@ public class ClientWorker implements Runnable {
                 buffer = in.readLine();
                 System.out.println(buffer);
             }
+			// Guarda se vamos a jogo ou não
+			if (buffer.equals("start"))
+				jogar = true;
+			
 			System.out.println("Prima enter para começar o jogo");
 			//Para desligar o TrataJogadorLeitura
 			out.println("morre");
-
-			//Para desligar o ciclo de leitura do herói do jogador.
-//			robot.typeEnter();
+			
         } catch (IOException e) {
 			e.printStackTrace();
         }

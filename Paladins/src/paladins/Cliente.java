@@ -78,6 +78,7 @@ public class Cliente {
         String buffer = "init";
 
         boolean inicio_sessao = false;
+		boolean sair = false;
 
         BufferedReader inputUser = new BufferedReader(new InputStreamReader(System.in));
 		PrintWriter outUser = new PrintWriter(System.out, true);
@@ -95,12 +96,6 @@ public class Cliente {
                 System.out.println("Bem vindo ao Overwatch!\n"
                         + "Para se registar selecione 1.\n"
                         + "Se já tem uma conta, selecione 2 para iniciar sessão.");
-                
-                int x=(Math.random()<0.5)?0:1;
-                int y=(Math.random()<0.5)?0:1;
-                int z=(Math.random()<0.5)?0:1;
-                int w=(Math.random()<0.5)?0:1;
-                System.out.println("Random numbers: " + x + y + z + w);
 
                 option = inputUser.readLine();
                 
@@ -182,54 +177,55 @@ public class Cliente {
                     + "Que deseja fazer?");
 
             // MATCHMAKING -----------------------------------------------------
-            System.out.println("1 - JOGAR\n"
-                    + "0 - SAIR");
-            System.out.print("Opção: ");
-            buffer = inputUser.readLine();
-            out.println(buffer);
-
-            if (buffer.equals("1")) {
-                System.out.print("\033[H\033[2J");
-                System.out.println("Em fila de espera para jogar...");
-                String resposta = in.readLine();
-                System.out.println("Foi encontrada uma sala!");
-                System.out.println("Equipa: " + resposta);
-            }
-
-            //ESCOLHA DOS HEROIS -----------------------------------------------
-            System.out.print("\033[H\033[2J");
-            System.out.println("ESCOLHA DOS HEROIS");
-            for (String h : herois.keySet()) {
-                System.out.println(h);
-            }
-
-			JavaRobotRescue robot = null;
-			try {
-				robot = new JavaRobotRescue();
-			} catch (AWTException ex) {
-				Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
-			}
-            //FASE DE CHAT
-            //inicialização do worker do cliente que irá ouvir constantemente qq mensagem que chegue
-			Scanner inputAux = new Scanner(System.in);
-            Thread t = new Thread(new ClientWorker(in, out)); //, robot));
-            t.start();		
-					
-			
-			//Permite ao jogador escolher o herói
-            System.out.print("Escolha o seu herói: ");
-			while ((buffer = inputAux.nextLine()) != null && !buffer.equals("")) {
+			while(!sair) {
+				System.out.println("1 - JOGAR\n"
+						+ "0 - SAIR");
+				System.out.print("Opção: ");
+				buffer = inputUser.readLine();
 				out.println(buffer);
+
+				if (buffer.equals("1")) {
+					System.out.print("\033[H\033[2J");
+					System.out.println("Em fila de espera para jogar...");
+					String resposta = in.readLine();
+					System.out.println("Foi encontrada uma sala!");
+					System.out.println("Equipa: " + resposta);
+
+					//ESCOLHA DOS HEROIS -----------------------------------------------
+					System.out.print("\033[H\033[2J");
+					System.out.println("ESCOLHA DOS HEROIS");
+					for (String h : herois.keySet()) {
+						System.out.println(h);
+					}
+					
+					//FASE DE CHAT
+					//inicialização do worker do cliente que irá ouvir constantemente qq mensagem que chegue
+					Scanner inputAux = new Scanner(System.in);
+					ClientWorker cw = new ClientWorker(in, out);
+					Thread t = new Thread(cw);
+					t.start();		
+
+
+					//Permite ao jogador escolher o herói
+					System.out.print("Escolha o seu herói: ");
+					while ((buffer = inputAux.nextLine()) != null && !buffer.equals("")) {
+						out.println(buffer);
+					}
+					
+					//Main thread espera que a escolha do herói acabe.
+					t.join();
+
+					if (cw.isJogar()) {
+						//Lê o resultado do jogo
+						buffer = in.readLine();
+						System.out.print("\033[H\033[2J");
+						System.out.println(buffer);
+					}
+				}
+				else if (buffer.equals("0")) {
+					sair = true;
+				}
 			}
-			
-			System.out.println("Cheguei aqui no cliente.");
-			//Main thread espera que a escolha do herói acabe.
-			t.join();
-			
-			
-			
-			buffer = in.readLine();
-			System.out.println(buffer);
 
             // SAIR ------------------------------------------------------------
             System.out.print("\033[H\033[2J");
