@@ -74,7 +74,7 @@ public class ServerWorker implements Runnable {
             String option = in.readLine();
 
 			// REGISTO ---------------------------------------------------------
-            if (option.equals("1")) {
+            if (option != null && option.equals("1")) {
                 boolean registou = false;
                 
                 while (!registou) {
@@ -93,7 +93,7 @@ public class ServerWorker implements Runnable {
                 }
             }
 			// AUTENTICAÇÃO ----------------------------------------------------
-			else if (option.equals("2")) {
+			else if (option != null && option.equals("2")) {
                 boolean iniciou_sessao = false;
 		
                 while(!iniciou_sessao){
