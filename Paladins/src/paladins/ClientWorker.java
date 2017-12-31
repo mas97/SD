@@ -41,7 +41,7 @@ public class ClientWorker implements Runnable {
 			// acabou.
             while (!buffer.equals("start") && !buffer.equals("timeout")) {
                 buffer = in.readLine();
-                System.out.println(buffer);
+                System.out.println("\n"+buffer);
             }
 			// Guarda se vamos a jogo ou não
 			if (buffer.equals("start"))

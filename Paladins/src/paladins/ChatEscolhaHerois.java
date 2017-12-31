@@ -8,15 +8,11 @@ package paladins;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author rokai
- */
+
 public class ChatEscolhaHerois {
 	private ArrayList<String> log;
 	
@@ -44,6 +40,8 @@ public class ChatEscolhaHerois {
 		this.herois_equipa2 = new HashMap<>();
 		this.herois = herois;
 		this.jogar = false;
+		this.lock1 = new ReentrantLock();
+		this.lock2 = new ReentrantLock();
 	}
 
 	public synchronized void add (String s)
@@ -97,6 +95,13 @@ public class ChatEscolhaHerois {
 		return herois_equipa2;
 	}
 	
+	private ReentrantLock daLock (int equipa) {
+		if (equipa == 1) {
+			return lock1;
+		}
+		return lock2;
+	}
+	
 	public String getHeroi(int equipa, String username) {
 		String res = null;
 		HashMap<String, String> heroisE = this.daEquipa(equipa);
@@ -116,10 +121,29 @@ public class ChatEscolhaHerois {
 		return heroisE.containsKey(inputJogador);
 	}
 
-	public void escolheHeroi(String heroi, int equipa, String username) {
+	//Coloquei synchronized por causa do "put".
+	public void escolheHeroi(String heroiEscolhido, int equipa, String username) {
 		HashMap<String, String> heroisE = this.daEquipa(equipa);
-		heroisE.put(heroi, username);
+		// Já escolheu um herói e quer substituir
 		
-		this.add("[ Equipa " + equipa + " ]  " + username + " escolheu: " + heroi);
+		this.daLock(equipa).lock();
+		try {
+			if (heroisE.containsValue(username))
+				for (String heroi: heroisE.keySet()) {
+					if (heroisE.get(heroi).equals(username)) {
+						heroisE.remove(heroi);
+						break;
+					}
+				}
+			
+			// Se tinha lá um escolhido foi removido.
+			// Inserir a nova opção.
+			heroisE.put(heroiEscolhido, username);
+		} finally {
+			this.daLock(equipa).unlock();
+		}
+		
+		//Adiciona a mensagem ao chat para ser difundida
+		this.add("[ Equipa " + equipa + " ]  " + username + " escolheu: " + heroiEscolhido);
 	}
 }

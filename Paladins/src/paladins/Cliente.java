@@ -210,15 +210,16 @@ public class Cliente {
 					System.out.print("Escolha o seu herói: ");
 					while ((buffer = inputAux.nextLine()) != null && !buffer.equals("")) {
 						out.println(buffer);
+						System.out.print("Escolha o seu herói: ");
 					}
 					
 					//Main thread espera que a escolha do herói acabe.
 					t.join();
-
+					
+					System.out.print("\033[H\033[2J");
 					if (cw.isJogar()) {
 						//Lê o resultado do jogo
 						buffer = in.readLine();
-						System.out.print("\033[H\033[2J");
 						System.out.println(buffer);
 					}
 				}

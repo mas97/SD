@@ -9,10 +9,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-/**
- *
- * @author rokai
- */
+
 //LÊ DO CLIENTE E MANDA PARA A ESTRUTURA
 public class TrataJogadorLeitura implements Runnable {
 	PrintWriter out;
@@ -39,14 +36,14 @@ public class TrataJogadorLeitura implements Runnable {
 	        {
 				//Filtrar a info antes de chegar ao chat para difundir
 				if(!current.equals("timeout") && !current.equals("start") && chat.existe(current)) {
-					if (!chat.isEscolhido(current, equipa))
+					if (!chat.isEscolhido(current, equipa)) {
 						chat.escolheHeroi(current, equipa, username);
+					}
 					else
-						out.println("esta escolhido");
+						out.println("\nO herói já se encontra escolhido.\n");
 				}
 				else 
-					out.println("nao existe");
-	            System.out.println("echo: " + current);
+					out.println("\nO herói escolhido não existe.\n");
 	        }
 	        
 	    } catch ( IOException e) { e.printStackTrace(); }

@@ -127,9 +127,11 @@ public class ServerWorker implements Runnable {
 						option = in.readLine();
 
 						//MATCHMAKING ----------------------------------------------
-						if (option.equals("1")) {
+						if (option != null && option.equals("1")) {
 							int meuRank = jogadores.getJogador(jogSessao).getRank();
 
+							System.out.println("[ " + jogSessao + " ]" + " meuRank: " + meuRank);
+							
 							//Carimbo que diz a que partida pertenço dentro do mesmo rank
 							int minhaPartida = -1;
 
@@ -140,7 +142,7 @@ public class ServerWorker implements Runnable {
 							int numJogMeuRank = salasRank.get(meuRank).getNumJog();
 							if (meuRank != 9 && meuRank != 0) {
 								int numJogAntRank = salasRank.get(meuRank - 1).getNumJog();
-								if (numJogMeuRank >= numJogAntRank) {
+								if (numJogMeuRank > numJogAntRank) {
 									minhaPartida = salasRank.get(meuRank).queue();
 									minhaSala = meuRank;
 								}
@@ -158,6 +160,8 @@ public class ServerWorker implements Runnable {
 								minhaSala = meuRank;
 							}
 
+							
+							
 							//FAZER EQUIPAS --------------------------------------------
 							// Cada equipa pode ser identificada unicamente com base na
 							// minhaSala e na minhaPartida.
@@ -228,7 +232,7 @@ public class ServerWorker implements Runnable {
 								}
 							}
 						}
-						else if (option.equals("0"))
+						else if (option == null || option.equals("0"))
 							sair = true;
 					}
 					
