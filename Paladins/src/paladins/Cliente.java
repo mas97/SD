@@ -95,6 +95,12 @@ public class Cliente {
                 System.out.println("Bem vindo ao Overwatch!\n"
                         + "Para se registar selecione 1.\n"
                         + "Se já tem uma conta, selecione 2 para iniciar sessão.");
+                
+                int x=(Math.random()<0.5)?0:1;
+                int y=(Math.random()<0.5)?0:1;
+                int z=(Math.random()<0.5)?0:1;
+                int w=(Math.random()<0.5)?0:1;
+                System.out.println("Random numbers: " + x + y + z + w);
 
                 option = inputUser.readLine();
                 
