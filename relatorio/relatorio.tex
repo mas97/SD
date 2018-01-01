@@ -68,7 +68,9 @@
 \section{Introdução}
 \label{sec:1}
 
-\hspace{3mm} 
+\hspace{3mm} Neste relatório será apresentado um projeto desenvolvido no âmbito da Unidade Curricular de Sistemas Distribuídos da Universidade do Minho.
+
+\par Este projeto consiste num sistema de gestão de jogadores de um servidor \emph{online} desde o seu registo, autenticação até à disputa do jogo em si. É de salientar que neste projeto no que diz respeito ao jogo em si, é feita apenas uma geração de um resultado aleatório definindo assim a equipa vencedora e a equipa perdedora.
 
 
 
@@ -95,28 +97,34 @@
 \label{sec:3}
 
 \subsection{Registo e login}
-
+\label{sec:3.1}
 \hspace{3mm} 
 
 
 
 \subsection{Matchmaking}
+\label{sec:3.2}
 
-\hspace{3mm} 
+\hspace{3mm} O \textit{Matchmaking} consiste na seleção dos jogadores que indicaram que pretendiam jogar seguindo algumas das regras que foram impostas na descrição do projeto como por exemplo a impossibilidade de numa sala de jogo existirem diferenças superiores a 1 unidade no que toca aos níveis dos jogadores intervenientes.
 
+\par Este sistema de \textit{matchmaking} para que a seleção dos jogadores seja feita da forma mais eficiente possível define zonas de agrupação de jogadores para cada um dos níveis possíveis exceto o nível 9. Assim, cada um dos jogadores pode entrar numa sala com o índice do seu nível ou na sala com índice imediatamente abaixo do seu nível. Nos casos de jogadores com nível 0 e 9, estes entram sempre em sala com índice 0 e 8 respetivamente. Finalmente, a decisão entre as ´duas salas possíveis é feita com base na ocupação de cada uma das salas, dando sempre a prioridade à sala que se encontra mais perto de estar completa, ou seja, com mais jogadores.
 
+\par Quando o número de jogadores necessários para passar à proxima fase é atingido (10), todos os jogadores passam à fase seguinte (construção das equipas).
 
 
 \subsection{Fazer equipas}
+\label{sec:3.3}
 
-\hspace{3mm} 
+\hspace{3mm} Para que o jogo seja o mais justo possível, foi desenvolvido um algoritmo para a construção das equipas que tem por base os níveis dos jogadores construido assim duas equipas com o nível médio dos níveis dos jogadores o mais próximo possível.
+
+\par O algoritmo verifica numa primeira fase se o número de jogadores em cada uma das equipas é o mesmo e se se verificar, caso o nível do jogador seja o maior da sala, então o jogador é inserido na equipa que tem um menor número de jogadores com o nível máximo da sala. Ainda com o mesmo número de jogadores em cada uma das equipas mas o jogador tem o menor nível possível na sala, então este é inserido na equipa que tem mais jogadores com o nível máximo na sala. Finalmente, no caso em que o número de jogadores em cada uma das equipas é desigual, então o jogador é inserido na equipa com o menor número de jogadores independentemente do seu nível.
 
 \subsection{Escolha de heróis}
-
+\label{sec:3.4}
 \hspace{3mm} 
 
 \subsection{Cálculo dos resultados}
-
+\label{sec:3.5}
 \hspace{3mm} 
 
 \pagebreak
