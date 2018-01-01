@@ -96,7 +96,11 @@
 
 \subsection{Registo e login}
 
-\hspace{3mm} 
+\hspace{3mm} Ao ser estabelecida a ligação ao Servidor, o Cliente será apresentado com as opções de fazer o registo no jogo, autenticar a sua identidade, supondo que já tenha feito o registo, e sair do jogo, terminando a ligação e encerrando o programa Cliente. Para guardar os registos dos jogadores, será necessário guardá-los no Servidor, num \textit{HashMap} cuja chave será o nome de utilizador e cujo valor será um objeto Jogador no qual estará guardada a informação do mesmo.
+
+\par Ao fazer o registo, o Cliente terá de introduzir um nome de utilizador que será único ao mesmo. Caso o nome de utilizador escolhido já existir em registo, o Servidor informará o Cliente da ocorrência e pedirá um nome de utilizador alternativo. Sendo introduzido um nome de utilizador válido, será de seguida introduzida uma palavra passe pelo Cliente, de modo a que este possa assegurar que apenas o jogador em questão possa aceder ao seu perfil, o qual pode ser acedido de qualquer programa Cliente. Após o registo, o jogador é de imediato autenticado, de modo a dar conveniência ao mesmo.
+
+\par Para fazer a autenticação de um jogador, é necessário que este tenha já feito registo no jogo. Para ser autenticado, um jogador necessita apenas introduzir o seu nome de utilizador e palavra passe. Caso alguma destas estiver errada, o Servidor informará o Cliente deste erro e dará outra oportunidade de autenticar o jogador. 
 
 
 
