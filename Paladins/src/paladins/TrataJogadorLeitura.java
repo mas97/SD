@@ -40,7 +40,7 @@ public class TrataJogadorLeitura implements Runnable {
 						chat.escolheHeroi(current, equipa, username);
 					}
 					else
-						out.println("\nO herói já se encontra escolhido.\n");
+						out.println("Heroi ja se encontra escolhido");
 				}
 				else 
 					out.println("\nO herói escolhido não existe.\n");

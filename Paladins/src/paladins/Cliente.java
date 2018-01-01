@@ -5,7 +5,6 @@
  */
 package paladins;
 
-import java.awt.AWTException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -13,8 +12,6 @@ import java.io.PrintWriter;
 import static java.lang.Thread.sleep;
 import java.net.Socket;
 import java.util.HashMap;
-import java.util.Random;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,8 +21,8 @@ import java.util.logging.Logger;
  */
 public class Cliente implements Runnable {
 
-    private String username;
-    private String password;
+    private final String username;
+    private final String password;
 
     public Cliente(String username, String password) {
         this.username = username;
@@ -80,6 +77,7 @@ public class Cliente implements Runnable {
 
             out = new PrintWriter(socket.getOutputStream(), true);
         } catch (IOException e) {
+			e.printStackTrace();
         }
 
         String buffer = "init";
@@ -88,30 +86,14 @@ public class Cliente implements Runnable {
         boolean sair = false;
 
         BufferedReader inputUser = new BufferedReader(new InputStreamReader(System.in));
-        PrintWriter outUser = new PrintWriter(System.out, true);
 
         try {
 
             String option = "init";
 
             while (!inicio_sessao) {
-
-                //coloquei este ciclo meio javardo para colocar a interface um pouco mais robusta no caso de
-                // não inserirmos 1 ou 2 no menu (não fiz uma coisa mais bonita porque não estava a acertar com a condição correta)
-                while (true) {
-                    System.out.print("\033[H\033[2J");
-                    System.out.println("Bem vindo ao Overwatch!\n"
-                            + "Para se registar selecione 1.\n"
-                            + "Se já tem uma conta, selecione 2 para iniciar sessão.");
-
-                    //ALTERADO AQUI PARA A AUTOMATIZAÇÃO
-                    //option = inputUser.readLine();
-                    option = "1";
-
-                    if (option.equals("1") || option.equals("2")) {
-                        break;
-                    }
-                }
+				
+				option = "1";
 
                 out.println(option);
 
@@ -122,129 +104,51 @@ public class Cliente implements Runnable {
 
                 if (option.equals("1")) {
                     opcao_correta = true;
-
+					
                     while (!username_valido) {
-                        System.out.print("\033[H\033[2J");
-                        System.out.print("Introduza o nome de utilizador que pretende associar à sua conta: ");
-                        //ALTERADO AQUI PARA A AUTOMATIZAÇÃO
-                        //buffer = inputUser.readLine();
                         buffer = this.username;
 
                         out.println(buffer);
-
+						
                         if (in.readLine().equals("OK")) {
                             username_valido = true;
-                            System.out.print("O nome de utilizador encontra-se disponível.\n"
-                                    + "Introduza uma palavra passe de registo: ");
-                            //ALTERADO AQUI PARA A AUTOMATIZAÇÃO
-                            //buffer = inputUser.readLine();
                             buffer = this.password;
                             out.println(buffer);
                             inicio_sessao = true;
-                        } else { //talvez precisamos aqui de uma var status para verificar o que o servidor respondeu
-                            System.out.print("\033[H\033[2J");
-                            System.out.print("O nome de utilizador não se encontra disponível.\n"
-                                    + "Se pretender cancelar o processo de registo selecione a opção 0.");
-                            if (inputUser.readLine().equals("0")) {
-                                break;
-                            }
-                        }
-
-                    }
-                } // AUTENTICAÇÃO ------------------------------------------------
-                else if (option.equals("2")) {
-                    boolean username_existe = false;
-                    opcao_correta = true;
-
-                    while (!username_existe) {
-                        System.out.print("\033[H\033[2J");
-                        System.out.print("Introduza o seu nome de utilizador: ");
-                        buffer = inputUser.readLine();
-                        out.println(buffer);
-
-                        buffer = in.readLine();
-
-                        if (buffer.equals("username válido")) {
-                            username_existe = true;
-
-                            boolean password_valida = false;
-
-                            while (!password_valida) {
-                                System.out.print("Introduza a sua palavra passe: ");
-                                buffer = inputUser.readLine();
-                                out.println(buffer);
-                                if (in.readLine().equals("palavra-passe válida")) {
-                                    password_valida = true;
-                                    inicio_sessao = true;
-                                }
-                            }
                         }
                     }
                 }
-
             }
 
             // SESSÃO INICIADA -------------------------------------------------
-            System.out.print("\033[H\033[2J");
-            System.out.println("Iniciou sessão com sucesso.\n"
-                    + "Que deseja fazer?");
-
+			
             // MATCHMAKING -----------------------------------------------------
             while (!sair) {
-                System.out.println("1 - JOGAR\n"
-                        + "0 - SAIR");
-                System.out.print("Opção: ");
-                //ALTERADO AQUI PARA A AUTOMATIZAÇÃO
-                //buffer = inputUser.readLine();
+
                 buffer = "1";
                 out.println(buffer);
 
                 if (buffer.equals("1")) {
-                    System.out.print("\033[H\033[2J");
-                    System.out.println("Em fila de espera para jogar...");
+					System.out.println("[ " + username + " ] Queue");
                     String resposta = in.readLine();
-                    System.out.println("Foi encontrada uma sala!");
-                    System.out.println("Equipa: " + resposta);
+                    System.out.println("[ " + username + " ] Equipa: " + resposta);
 
                     //ESCOLHA DOS HEROIS -----------------------------------------------
-                    System.out.print("\033[H\033[2J");
-                    System.out.println("ESCOLHA DOS HEROIS");
-                    for (String h : herois.keySet()) {
-                        System.out.println(h);
-                    }
-
-                    //FASE DE CHAT
                     //inicialização do worker do cliente que irá ouvir constantemente qq mensagem que chegue
-                    Scanner inputAux = new Scanner(System.in);
-                    ClientWorker cw = new ClientWorker(in, out);
+                    ClientWorker cw = new ClientWorker(in, out, herois, username);
                     Thread t = new Thread(cw);
                     t.start();
-
-                    //AUTOMATIZAÇÃO PARA A ESCOLHA DOS HERÓIS
-                    Random generator = new Random();
-                    Object[] values = herois.values().toArray();
                     
-                    //Permite ao jogador escolher o herói
-                    System.out.print("Escolha o seu herói: ");
-                    while (buffer != null && !buffer.equals("")) {
-
-                        //AUTOMATIZAÇÃO PARA A ESCOLHA DOS HERÓIS
-                        Object randomValue = values[generator.nextInt(values.length)];
-
-                        buffer = (String) randomValue;
-
-                        out.println(buffer);
-                        System.out.print("Escolha o seu herói: ");
-                    }
+                    System.out.println("[ " + username + " ] Escolha heroi");
 
                     //Main thread espera que a escolha do herói acabe.
                     t.join();
 
-                    System.out.print("\033[H\033[2J");
                     if (cw.isJogar()) {
+						System.out.println("[ " + username + " ] Jogar");
                         //Lê o resultado do jogo
                         buffer = in.readLine();
-                        System.out.println(buffer);
+                        System.out.println("[ " + username + " ] Resultado: " + buffer);
                     }
                 } else if (buffer.equals("0")) {
                     sair = true;

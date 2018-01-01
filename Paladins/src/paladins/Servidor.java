@@ -24,7 +24,7 @@ public class Servidor implements Runnable {
         HashMap<Integer, Matchmaking> salasRank = new HashMap<>();
         //Cria as 9 salas para fazer o matchmaking
         for (int i = 0; i < 9; i++) {
-            salasRank.put(i, new Matchmaking(2));
+            salasRank.put(i, new Matchmaking(10));
         }
 
         // Hash com os dados necessários para criar uma equipa

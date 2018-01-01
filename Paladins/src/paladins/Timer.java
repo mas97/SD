@@ -29,7 +29,7 @@ public class Timer implements Runnable {
         try {
 			boolean acabou = acabouGeral;
 			this.em_espera++;
-			if (em_espera < 2) {
+			if (em_espera < 10) {
 				while (acabou == acabouGeral)
 					wait();
             } else {

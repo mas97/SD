@@ -69,7 +69,8 @@ public class ChatEscolhaHerois {
 				if (s.equals("timeout")) {
 					int count1 = herois_equipa1.size();
 					int count2 = herois_equipa2.size();
-					if (count1 == 1 && count2 == 1) {
+//					System.out.println("Count1: " + count1 + " || Count2: " + count2);
+					if (count1 == 5 && count2 == 5) {
 						s = "start";
 						this.jogar = true;
 					}
