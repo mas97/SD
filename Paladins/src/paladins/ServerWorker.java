@@ -211,9 +211,9 @@ public class ServerWorker implements Runnable {
 								// Sincroniza com o final do jogo
 								jogar.join();
 
-								int resultadoMeuJogo = meuJogo.getResultado();
+								int equipaVencedora = meuJogo.getResultado();
 								
-								if (minhaEquipa == resultadoMeuJogo) {
+								if (minhaEquipa == equipaVencedora) {
 									if (meuRank != 9) {
 										meuRank++;
 										jogadores.getJogador(jogSessao).setRank(meuRank);
