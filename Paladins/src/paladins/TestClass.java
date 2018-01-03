@@ -5,10 +5,7 @@
  */
 package paladins;
 
-/**
- *
- * @author MarcoSilva
- */
+
 public class TestClass {
 
     public static void main(String[] args) {
@@ -19,14 +16,13 @@ public class TestClass {
 
         NameGenerator gen = new NameGenerator();
 
-        for (int i = 0; i < 100; i++) {
-            String username = gen.getName();
-            String password = gen.getName();
+        for (int i = 0; i < 200; i++) {
+			String username = gen.getName();
+			String password = gen.getName();
 
-            System.out.println("Jogador criado com o username " + username + " e com a password " + password);
-            Thread cliente = new Thread(new Cliente(username, password));
-            cliente.start();
-            
-        }
+			System.out.println("Jogador criado com o username " + username + " e com a password " + password);
+			Thread cliente = new Thread(new Cliente(username, password));
+			cliente.start();
+		}
     }
 }

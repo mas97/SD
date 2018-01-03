@@ -85,7 +85,9 @@ public class ServerWorker implements Runnable {
 						out.println("OK");
 
                         password = in.readLine();
-                        Jogador novo_jogador = new Jogador(username, password, 0);			
+						Random r = new Random();
+						int randRank = r.ints(0, (9 + 1)).findFirst().getAsInt();
+                        Jogador novo_jogador = new Jogador(username, password, randRank);			
                         this.jogadores.putJogador(novo_jogador);
 						this.jogSessao = username;
                         registou = true;
@@ -139,8 +141,9 @@ public class ServerWorker implements Runnable {
 							int minhaSala = -1;
 
 							//Vai buscar a sala indicada para o rank do jogSessao e faz queue
-							int numJogMeuRank = salasRank.get(meuRank).getNumJog();
+							
 							if (meuRank != 9 && meuRank != 0) {
+								int numJogMeuRank = salasRank.get(meuRank).getNumJog();
 								int numJogAntRank = salasRank.get(meuRank - 1).getNumJog();
 								if (numJogMeuRank > numJogAntRank) {
 									minhaPartida = salasRank.get(meuRank).queue();
