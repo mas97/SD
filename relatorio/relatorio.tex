@@ -162,8 +162,11 @@ Por fim, o resultado é guardado na instância de Jogo para mais tarde ser consu
 \section{Conclusões}
 \label{sec:4}
 
-\hspace{3mm} 
+\hspace{3mm} Este projecto encontra-se finalizado. Contudo, alguns ajustes podem ser feitos e certas funcionalidades podem ser certamente melhoradas.
+Nomeadamente, no que toca ao número de threads usadas para realizar o matchmaking, este encontra-se fixo em 9 threads, uma por cada rank. No entanto, com um número elevado de jogadores esta abordagem pode reduzir a performance do jogo e os tempos de espera dos jogadores pode aumentar consideravelmente. Uma possível proposta seria tornar o número de threads, responsáveis por esta funcionalidade, dinâmico. Quanto maior o número de jogadores em espera para jogar, maior seria o número de threads ativas e vice-versa. Desta forma, o matchmaking conseguiria obter tempos de espera menores.
 
+Além disso, outro ponto que deveria ser abordado numa próxima etapa seria melhorar a interface com o utilizador. De facto, na escolha dos heróis, devido à concorrência existente entre os vários jogadores, o chat que estes utilizam para o efeito encontra-se desordenado e nada intuitivo. Sendo este um dos principais aspetos a melhorar.
 
+Concluindo, o projeto decorreu sem grandes sobressaltos e os tempos de resposta mesmo com 500 jogadores foram satisfatórios. De recordar que estes resultados não seriam possiveis se não fosse utilizada uma abordagem concorrente ao problema, ou seja, utilizando o modelo cliente/servidor com a ajuda de sockets, threads e controlo de concorrência.
 
 \end{document}
